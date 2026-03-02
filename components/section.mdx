@@ -1,0 +1,88 @@
+---
+title: 'Section'
+description: 'Section component for organizing content with rows and columns'
+---
+
+Display a section that can be formatted using columns and rows.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/section -E
+```
+
+```bash yarn
+yarn add @react-email/section -E
+```
+
+```bash pnpm
+pnpm add @react-email/section -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Section } from '@react-email/section';
+import { Column } from '@react-email/column';
+import { Row } from '@react-email/row';
+import { Text } from '@react-email/text';
+
+const Email = () => {
+  return (
+    {/* A simple section */}
+    <Section>
+      <Text>Hello World</Text>
+    </Section>
+
+    {/* Formatted with rows and columns */}
+    <Section>
+      <Row>
+        <Column>Column 1, Row 1</Column>
+        <Column>Column 2, Row 1</Column>
+      </Row>
+      <Row>
+        <Column>Column 1, Row 2</Column>
+        <Column>Column 2, Row 2</Column>
+      </Row>
+    </Section>
+  );
+};
+```
+
+## Props
+
+The `Section` component accepts all standard HTML table attributes.
+
+<ParamField path="children" type="ReactNode">
+  The content to place inside the section. Can contain text, components, or Row/Column components for layout
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the section
+</ParamField>
+
+## Implementation Details
+
+The `Section` component renders as a table with:
+- Centered alignment
+- Full width (`100%`)
+- No border, cellPadding, or cellSpacing
+- `role="presentation"` for accessibility
+
+## TypeScript
+
+```tsx
+export type SectionProps = Readonly<React.ComponentPropsWithoutRef<'table'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

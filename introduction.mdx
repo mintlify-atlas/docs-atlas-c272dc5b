@@ -1,0 +1,152 @@
+---
+title: Introduction
+description: Build and send emails using React components
+---
+
+<img
+  className="block dark:hidden"
+  src="https://react.email/static/covers/react-email.png"
+  alt="React Email"
+/>
+<img
+  className="hidden dark:block"
+  src="https://react.email/static/covers/react-email.png"
+  alt="React Email"
+/>
+
+## Welcome to React Email
+
+React Email is a collection of high-quality, unstyled components for creating beautiful emails using React and TypeScript. It reduces the pain of coding responsive emails with dark mode support and handles inconsistencies between Gmail, Outlook, and other email clients for you.
+
+<CardGroup cols={2}>
+  <Card
+    title="Installation"
+    icon="download"
+    href="/installation"
+  >
+    Install React Email components and get started in seconds
+  </Card>
+  <Card
+    title="Quickstart"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Build your first email template in minutes
+  </Card>
+  <Card
+    title="Components"
+    icon="puzzle-piece"
+    href="/components/overview"
+  >
+    Explore all available React Email components
+  </Card>
+  <Card
+    title="Integrations"
+    icon="plug"
+    href="/integrations/overview"
+  >
+    Send emails with Resend, Nodemailer, SendGrid, and more
+  </Card>
+</CardGroup>
+
+## Why React Email?
+
+Email development needs a revamp. We need to stop developing emails like it's 2010 and rethink how email can be done in 2025 and beyond.
+
+<CardGroup cols={3}>
+  <Card title="Modern DX" icon="code">
+    Write emails using React components and TypeScript
+  </Card>
+  <Card title="Email Client Support" icon="envelope">
+    Tested on Gmail, Outlook, Apple Mail, Yahoo, and more
+  </Card>
+  <Card title="Dark Mode" icon="moon">
+    Built-in support for dark mode across email clients
+  </Card>
+  <Card title="Responsive" icon="mobile">
+    Mobile-friendly emails without the headache
+  </Card>
+  <Card title="Type Safe" icon="shield">
+    Full TypeScript support for better DX
+  </Card>
+  <Card title="Developer Tools" icon="terminal">
+    Live preview server and CLI tools included
+  </Card>
+</CardGroup>
+
+## What's Included
+
+<AccordionGroup>
+  <Accordion title="Component Library" icon="layer-group">
+    Over 20 production-ready components including Button, Container, Text, Image, and more. All components are unstyled by default, giving you complete control over the design.
+  </Accordion>
+  
+  <Accordion title="Render Engine" icon="gears">
+    Transform your React components into HTML email templates with the `@react-email/render` package. Works in Node.js, Edge runtimes, and browsers.
+  </Accordion>
+  
+  <Accordion title="Development Server" icon="server">
+    Live preview server with hot reload. See your email changes instantly as you code with the `react-email` CLI.
+  </Accordion>
+  
+  <Accordion title="Email Provider Integrations" icon="arrows-left-right">
+    Examples and guides for sending emails with popular providers like Resend, Nodemailer, SendGrid, Postmark, AWS SES, and more.
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  React Email components are designed to work across all major email clients, ensuring your emails look great everywhere.
+</Note>
+
+## Supported Email Clients
+
+All components are tested using the most popular email clients:
+
+- Gmail ✓
+- Apple Mail ✓
+- Outlook ✓
+- Yahoo! Mail ✓
+- HEY ✓
+- Superhuman ✓
+
+## Next Steps
+
+<Steps>
+  <Step title="Install React Email">
+    Get started by installing the components package
+    
+    ```bash
+    npm install @react-email/components
+    ```
+  </Step>
+  
+  <Step title="Create Your First Email">
+    Build a simple email template using React components
+    
+    ```jsx
+    import { Button, Html } from '@react-email/components';
+    
+    export default function Email() {
+      return (
+        <Html>
+          <Button href="https://example.com">Click me</Button>
+        </Html>
+      );
+    }
+    ```
+  </Step>
+  
+  <Step title="Render and Send">
+    Convert your React component to HTML and send it with your email provider
+    
+    ```jsx
+    import { render } from '@react-email/components';
+    
+    const html = await render(<Email />);
+    ```
+  </Step>
+</Steps>
+
+<Card title="Ready to start?" icon="rocket" href="/installation">
+  Head over to the installation guide to get React Email set up in your project
+</Card>

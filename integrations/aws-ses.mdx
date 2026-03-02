@@ -1,0 +1,216 @@
+---
+title: AWS SES
+description: Send emails with React Email using Amazon Simple Email Service
+---
+
+Amazon Simple Email Service (SES) is a scalable and cost-effective email service built on AWS infrastructure. It's ideal for applications that need to send large volumes of emails.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the AWS SDK:
+    
+    ```bash
+    npm install react-email @react-email/components @aws-sdk/client-ses
+    ```
+  </Step>
+  
+  <Step title="Configure AWS credentials">
+    Set up your AWS credentials and region as environment variables:
+    
+    ```bash
+    AWS_ACCESS_KEY_ID=your-access-key
+    AWS_SECRET_ACCESS_KEY=your-secret-key
+    AWS_SES_REGION=us-east-1
+    ```
+  </Step>
+  
+  <Step title="Verify your email or domain">
+    Before sending emails, you need to verify your sender email address or domain in the AWS SES console.
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import type { SendEmailCommandInput } from '@aws-sdk/client-ses';
+import { SES } from '@aws-sdk/client-ses';
+import { render } from '@react-email/components';
+import { Email } from './email';
+
+const ses = new SES({ region: process.env.AWS_SES_REGION });
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+const params: SendEmailCommandInput = {
+  Source: 'you@example.com',
+  Destination: {
+    ToAddresses: ['user@gmail.com'],
+  },
+  Message: {
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: emailHtml,
+      },
+    },
+    Subject: {
+      Charset: 'UTF-8',
+      Data: 'hello world',
+    },
+  },
+};
+
+await ses.sendEmail(params);
+```
+
+## Advanced features
+
+### Multiple recipients
+
+```tsx
+const params: SendEmailCommandInput = {
+  Source: 'you@example.com',
+  Destination: {
+    ToAddresses: ['user1@gmail.com', 'user2@gmail.com'],
+    CcAddresses: ['cc@example.com'],
+    BccAddresses: ['bcc@example.com'],
+  },
+  Message: {
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: emailHtml,
+      },
+    },
+    Subject: {
+      Charset: 'UTF-8',
+      Data: 'hello world',
+    },
+  },
+};
+```
+
+### Plain text version
+
+```tsx
+import { render } from '@react-email/components';
+
+const emailHtml = await render(<Email url="https://example.com" />);
+const emailText = await render(<Email url="https://example.com" />, {
+  plainText: true,
+});
+
+const params: SendEmailCommandInput = {
+  Source: 'you@example.com',
+  Destination: {
+    ToAddresses: ['user@gmail.com'],
+  },
+  Message: {
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: emailHtml,
+      },
+      Text: {
+        Charset: 'UTF-8',
+        Data: emailText,
+      },
+    },
+    Subject: {
+      Charset: 'UTF-8',
+      Data: 'hello world',
+    },
+  },
+};
+```
+
+### Reply-to addresses
+
+```tsx
+const params: SendEmailCommandInput = {
+  Source: 'you@example.com',
+  ReplyToAddresses: ['reply@example.com'],
+  Destination: {
+    ToAddresses: ['user@gmail.com'],
+  },
+  Message: {
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: emailHtml,
+      },
+    },
+    Subject: {
+      Charset: 'UTF-8',
+      Data: 'hello world',
+    },
+  },
+};
+```
+
+### Configuration sets
+
+Use configuration sets for tracking and analytics:
+
+```tsx
+const params: SendEmailCommandInput = {
+  Source: 'you@example.com',
+  Destination: {
+    ToAddresses: ['user@gmail.com'],
+  },
+  Message: {
+    Body: {
+      Html: {
+        Charset: 'UTF-8',
+        Data: emailHtml,
+      },
+    },
+    Subject: {
+      Charset: 'UTF-8',
+      Data: 'hello world',
+    },
+  },
+  ConfigurationSetName: 'my-config-set',
+};
+```
+
+## Error handling
+
+```tsx
+try {
+  const response = await ses.sendEmail(params);
+  console.log('Email sent:', response.MessageId);
+} catch (error) {
+  console.error('AWS SES error:', error);
+}
+```
+
+## Important notes
+
+- **Sandbox mode**: New AWS SES accounts start in sandbox mode with sending limits
+- **Verification**: You must verify email addresses or domains before sending
+- **Moving to production**: Request production access to remove sandbox limitations
+- **Pricing**: AWS SES is very cost-effective for high-volume sending
+- **Regions**: Choose the region closest to your users for best performance

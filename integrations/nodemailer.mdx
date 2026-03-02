@@ -1,0 +1,160 @@
+---
+title: Nodemailer
+description: Send emails with React Email using Nodemailer
+---
+
+Nodemailer is the most popular Node.js module for sending emails. It supports SMTP and other transport methods, making it versatile for various email sending scenarios.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and Nodemailer:
+    
+    ```bash
+    npm install react-email @react-email/components nodemailer
+    npm install -D @types/nodemailer
+    ```
+  </Step>
+  
+  <Step title="Configure SMTP settings">
+    Set up your SMTP credentials as environment variables:
+    
+    ```bash
+    SMTP_HOST=smtp.example.com
+    SMTP_PORT=465
+    SMTP_USER=your_user
+    SMTP_PASS=your_password
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import { render } from '@react-email/components';
+import nodemailer from 'nodemailer';
+import { Email } from './email';
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.forwardemail.net',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'my_user',
+    pass: 'my_password',
+  },
+});
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+const options = {
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+};
+
+await transporter.sendMail(options);
+```
+
+## Transport options
+
+Nodemailer supports various transport methods:
+
+### SMTP
+
+```tsx
+const transporter = nodemailer.createTransport({
+  host: 'smtp.example.com',
+  port: 587,
+  secure: false, // true for 465, false for other ports
+  auth: {
+    user: 'username',
+    pass: 'password',
+  },
+});
+```
+
+### Gmail
+
+```tsx
+const transporter = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    user: 'your-email@gmail.com',
+    pass: 'your-app-password',
+  },
+});
+```
+
+### SendGrid SMTP
+
+```tsx
+const transporter = nodemailer.createTransport({
+  host: 'smtp.sendgrid.net',
+  port: 587,
+  auth: {
+    user: 'apikey',
+    pass: process.env.SENDGRID_API_KEY,
+  },
+});
+```
+
+## Additional features
+
+### Attachments
+
+```tsx
+await transporter.sendMail({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+  attachments: [
+    {
+      filename: 'document.pdf',
+      path: '/path/to/document.pdf',
+    },
+  ],
+});
+```
+
+### Plain text fallback
+
+```tsx
+import { render } from '@react-email/components';
+
+const emailHtml = await render(<Email url="https://example.com" />);
+const emailText = await render(<Email url="https://example.com" />, {
+  plainText: true,
+});
+
+await transporter.sendMail({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+  text: emailText,
+});
+```

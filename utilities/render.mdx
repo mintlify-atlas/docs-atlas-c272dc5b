@@ -1,0 +1,306 @@
+---
+title: 'Render'
+description: 'Transform React email components into HTML strings'
+---
+
+<Note>
+  The `@react-email/render` package provides different builds optimized for Node.js, edge runtimes, and browsers.
+</Note>
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/render
+```
+
+```bash yarn
+yarn add @react-email/render
+```
+
+```bash pnpm
+pnpm add @react-email/render
+```
+</CodeGroup>
+
+## render
+
+Converts a React email component into an HTML string.
+
+```tsx
+import { render } from '@react-email/render';
+import { Email } from './emails/welcome';
+
+const html = await render(<Email />);
+```
+
+### Parameters
+
+<ParamField path="node" type="React.ReactNode" required>
+  The React component to render as an email
+</ParamField>
+
+<ParamField path="options" type="Options">
+  Configuration options for rendering
+  
+  <Expandable title="properties">
+    <ParamField path="pretty" type="boolean" default="false">
+      Format the output HTML with proper indentation using Prettier
+    </ParamField>
+    
+    <ParamField path="plainText" type="boolean" default="false">
+      Convert the HTML to plain text instead of returning HTML
+    </ParamField>
+    
+    <ParamField path="htmlToTextOptions" type="HtmlToTextOptions">
+      Options for HTML to plain text conversion (only used when `plainText` is `true`). See [html-to-text documentation](https://github.com/html-to-text/node-html-to-text) for available options.
+    </ParamField>
+  </Expandable>
+</ParamField>
+
+### Returns
+
+<ResponseField name="html" type="Promise<string>">
+  A promise that resolves to the rendered HTML string with DOCTYPE declaration, or plain text if `plainText` option is enabled
+</ResponseField>
+
+## Usage Examples
+
+### Node.js
+
+```tsx
+import { render } from '@react-email/render';
+import { WelcomeEmail } from './emails/welcome';
+
+// Basic rendering
+const html = await render(<WelcomeEmail name="John" />);
+
+// With pretty formatting
+const prettyHtml = await render(<WelcomeEmail name="John" />, {
+  pretty: true,
+});
+
+// Convert to plain text
+const plainText = await render(<WelcomeEmail name="John" />, {
+  plainText: true,
+});
+```
+
+### Edge Runtime (Vercel, Cloudflare Workers)
+
+```tsx
+import { render } from '@react-email/render';
+import { WelcomeEmail } from './emails/welcome';
+
+export const config = {
+  runtime: 'edge',
+};
+
+export default async function handler(req: Request) {
+  const html = await render(<WelcomeEmail name="Sarah" />);
+  
+  return new Response(html, {
+    headers: {
+      'Content-Type': 'text/html',
+    },
+  });
+}
+```
+
+### Next.js App Router
+
+```tsx
+import { render } from '@react-email/render';
+import { WelcomeEmail } from '@/emails/welcome';
+import { NextResponse } from 'next/server';
+
+export async function POST(request: Request) {
+  const { name } = await request.json();
+  
+  const html = await render(<WelcomeEmail name={name} />);
+  
+  // Send email with your provider
+  // await sendEmail({ html, ... });
+  
+  return NextResponse.json({ success: true });
+}
+```
+
+### Browser (Client-Side)
+
+```tsx
+import { render } from '@react-email/render';
+import { NewsletterEmail } from './emails/newsletter';
+
+const PreviewButton = () => {
+  const handlePreview = async () => {
+    const html = await render(<NewsletterEmail />);
+    
+    // Open preview in new window
+    const newWindow = window.open();
+    newWindow?.document.write(html);
+  };
+  
+  return <button onClick={handlePreview}>Preview Email</button>;
+};
+```
+
+## Utility Functions
+
+### toPlainText
+
+Converts HTML content to plain text format.
+
+```tsx
+import { toPlainText } from '@react-email/render';
+
+const html = '<h1>Welcome</h1><p>Thank you for signing up!</p>';
+const plainText = toPlainText(html);
+// Output: "Welcome\n\nThank you for signing up!"
+```
+
+#### Parameters
+
+<ParamField path="html" type="string" required>
+  The HTML string to convert to plain text
+</ParamField>
+
+<ParamField path="options" type="HtmlToTextOptions">
+  Configuration options for the conversion. See [html-to-text documentation](https://github.com/html-to-text/node-html-to-text#options)
+</ParamField>
+
+#### Returns
+
+<ResponseField name="text" type="string">
+  The plain text representation of the HTML
+</ResponseField>
+
+### pretty
+
+Formats HTML with proper indentation and formatting using Prettier.
+
+```tsx
+import { pretty } from '@react-email/render';
+
+const html = '<div><h1>Title</h1><p>Content</p></div>';
+const formatted = pretty(html);
+```
+
+#### Parameters
+
+<ParamField path="str" type="string" required>
+  The HTML string to format
+</ParamField>
+
+<ParamField path="options" type="Options">
+  Prettier formatting options. Defaults to `{ endOfLine: 'lf', tabWidth: 2, bracketSameLine: true, parser: 'html' }`
+</ParamField>
+
+#### Returns
+
+<ResponseField name="formatted" type="string">
+  The formatted HTML string
+</ResponseField>
+
+## Advanced Usage
+
+### Custom Plain Text Options
+
+```tsx
+import { render } from '@react-email/render';
+import { Email } from './emails/notification';
+
+const plainText = await render(<Email />, {
+  plainText: true,
+  htmlToTextOptions: {
+    wordwrap: 80,
+    selectors: [
+      { selector: 'a', options: { hideLinkHrefIfSameAsText: true } },
+      { selector: 'img', format: 'skip' },
+    ],
+  },
+});
+```
+
+### Combining Options
+
+```tsx
+import { render, toPlainText } from '@react-email/render';
+import { Email } from './emails/receipt';
+
+// Render both HTML and plain text versions
+const html = await render(<Email />, { pretty: true });
+const text = toPlainText(html);
+
+// Use both versions when sending email
+await sendEmail({
+  html,
+  text,
+  subject: 'Your Receipt',
+  to: 'customer@example.com',
+});
+```
+
+## Runtime Compatibility
+
+The package automatically uses the correct build based on your environment:
+
+- **Node.js**: Uses `renderToPipeableStream` or `renderToReadableStream` (Node.js 20+)
+- **Edge Runtimes**: Optimized for Vercel Edge, Cloudflare Workers, Deno
+- **Browser**: Client-side rendering support
+
+## TypeScript
+
+```tsx
+import { render, type Options } from '@react-email/render';
+import type { ReactNode } from 'react';
+
+interface SendEmailParams {
+  component: ReactNode;
+  options?: Options;
+}
+
+async function sendEmail({ component, options }: SendEmailParams) {
+  const html = await render(component, options);
+  // Send email...
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always await the render function">
+    The `render` function is asynchronous and returns a Promise. Make sure to use `await` or handle the Promise properly.
+    
+    ```tsx
+    // Good
+    const html = await render(<Email />);
+    
+    // Also good
+    render(<Email />).then(html => {
+      // Use html
+    });
+    ```
+  </Accordion>
+  
+  <Accordion title="Use plain text for better deliverability">
+    Many email clients and spam filters prefer emails with both HTML and plain text versions.
+    
+    ```tsx
+    const html = await render(<Email />);
+    const text = await render(<Email />, { plainText: true });
+    
+    await sendEmail({ html, text });
+    ```
+  </Accordion>
+  
+  <Accordion title="Enable pretty mode for debugging">
+    When debugging email templates, use the `pretty` option to make the HTML more readable.
+    
+    ```tsx
+    const html = await render(<Email />, {
+      pretty: process.env.NODE_ENV === 'development',
+    });
+    ```
+  </Accordion>
+</AccordionGroup>

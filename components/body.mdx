@@ -1,0 +1,78 @@
+---
+title: 'Body'
+description: 'Body wrapper component for email content'
+---
+
+A React body component to wrap emails. This component handles email client quirks and ensures consistent rendering across all clients.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/body -E
+```
+
+```bash yarn
+yarn add @react-email/body -E
+```
+
+```bash pnpm
+pnpm add @react-email/body -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Html } from "@react-email/html";
+import { Body } from "@react-email/body";
+import { Section } from "@react-email/section";
+import { Column } from "@react-email/column";
+
+const Email = () => {
+  return (
+    <Html lang="en">
+      <Body style={{ backgroundColor: "#61dafb" }}>
+        <Section>
+          <Column style={{ width: "50%" }}>{/* First column */}</Column>
+          <Column style={{ width: "50%" }}>{/* Second column */}</Column>
+        </Section>
+      </Body>
+    </Html>
+  );
+};
+```
+
+## Props
+
+The `Body` component accepts all standard HTML attributes for the `<body>` element.
+
+<ParamField path="children" type="ReactNode">
+  The content of the email body
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the body element. Margin properties are automatically handled to prevent layout issues across email clients
+</ParamField>
+
+## Implementation Details
+
+The `Body` component wraps your content in a table structure to ensure consistent rendering across email clients, particularly Yahoo and AOL which remove body element styles.
+
+Margin properties are automatically reset if set by the user to prevent margin summing issues with email client default styles.
+
+## TypeScript
+
+```tsx
+export type BodyProps = Readonly<React.HtmlHTMLAttributes<HTMLBodyElement>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

@@ -1,0 +1,123 @@
+---
+title: 'Heading'
+description: 'Heading component with h1-h6 support'
+---
+
+A block of heading text with support for all heading levels (h1-h6).
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/heading -E
+```
+
+```bash yarn
+yarn add @react-email/heading -E
+```
+
+```bash pnpm
+pnpm add @react-email/heading -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Heading } from "@react-email/heading";
+
+const Email = () => {
+  return <Heading as="h1">Lorem ipsum</Heading>;
+};
+```
+
+## Props
+
+<ParamField path="as" type="'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'" default="h1">
+  The heading level to render
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The heading text content
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the heading
+</ParamField>
+
+<ParamField path="m" type="string | number">
+  Shorthand for setting all margins
+</ParamField>
+
+<ParamField path="mx" type="string | number">
+  Horizontal margin (left and right)
+</ParamField>
+
+<ParamField path="my" type="string | number">
+  Vertical margin (top and bottom)
+</ParamField>
+
+<ParamField path="mt" type="string | number">
+  Top margin
+</ParamField>
+
+<ParamField path="mr" type="string | number">
+  Right margin
+</ParamField>
+
+<ParamField path="mb" type="string | number">
+  Bottom margin
+</ParamField>
+
+<ParamField path="ml" type="string | number">
+  Left margin
+</ParamField>
+
+## Examples
+
+### Different Heading Levels
+
+```jsx
+import { Heading } from "@react-email/heading";
+
+const Email = () => {
+  return (
+    <>
+      <Heading as="h1">Main Title</Heading>
+      <Heading as="h2">Subtitle</Heading>
+      <Heading as="h3">Section Heading</Heading>
+    </>
+  );
+};
+```
+
+### With Custom Margins
+
+```jsx
+import { Heading } from "@react-email/heading";
+
+const Email = () => {
+  return (
+    <Heading as="h1" mt="24px" mb="16px" style={{ color: "#333" }}>
+      Welcome to Our Newsletter
+    </Heading>
+  );
+};
+```
+
+## TypeScript
+
+```tsx
+export type HeadingAs = As<'h1', 'h2', 'h3', 'h4', 'h5', 'h6'>;
+export type HeadingProps = HeadingAs & Margin;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

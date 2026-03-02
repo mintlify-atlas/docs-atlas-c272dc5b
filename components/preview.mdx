@@ -1,0 +1,105 @@
+---
+title: 'Preview'
+description: 'Email preview text displayed in inbox'
+---
+
+A preview text that will be displayed in the inbox of the recipient.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/preview -E
+```
+
+```bash yarn
+yarn add @react-email/preview -E
+```
+
+```bash pnpm
+pnpm add @react-email/preview -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Preview } from "@react-email/preview";
+
+const Email = () => {
+  return <Preview>Email preview text</Preview>;
+};
+```
+
+## Props
+
+<ParamField path="children" type="string | string[]" required>
+  The preview text content. Maximum length is 150 characters
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Additional inline styles for the preview container
+</ParamField>
+
+## How It Works
+
+The `Preview` component renders text that is:
+- Hidden from the email body (not visible to the user when reading the email)
+- Visible in the email client's inbox preview pane
+- Automatically truncated to 150 characters maximum
+- Padded with invisible whitespace characters to prevent email clients from showing body text in the preview
+
+## Example in Full Email
+
+```jsx
+import { Html } from "@react-email/html";
+import { Head } from "@react-email/head";
+import { Preview } from "@react-email/preview";
+import { Body } from "@react-email/body";
+import { Container } from "@react-email/container";
+import { Heading } from "@react-email/heading";
+import { Text } from "@react-email/text";
+
+const Email = () => {
+  return (
+    <Html>
+      <Head>
+        <Preview>Confirm your email address to get started</Preview>
+      </Head>
+      <Body>
+        <Container>
+          <Heading>Welcome!</Heading>
+          <Text>Please confirm your email address...</Text>
+        </Container>
+      </Body>
+    </Html>
+  );
+};
+```
+
+## Best Practices
+
+- Keep preview text concise and compelling (under 150 characters)
+- Use preview text to encourage opens by summarizing the email's value
+- Avoid duplicating your subject line
+- Place the `Preview` component near the top of your email (typically in the `<Head>`)
+
+## TypeScript
+
+```tsx
+export type PreviewProps = Readonly<
+  React.ComponentPropsWithoutRef<'div'> & {
+    children: string | string[];
+  }
+>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

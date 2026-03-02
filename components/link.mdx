@@ -1,0 +1,96 @@
+---
+title: 'Link'
+description: 'Hyperlink component for web pages and email addresses'
+---
+
+A hyperlink to web pages, email addresses, or anything else a URL can address.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/link -E
+```
+
+```bash yarn
+yarn add @react-email/link -E
+```
+
+```bash pnpm
+pnpm add @react-email/link -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Link } from "@react-email/link";
+
+const Email = () => {
+  return <Link href="https://example.com">Example</Link>;
+};
+```
+
+## Props
+
+The `Link` component accepts all standard HTML anchor (`<a>`) element attributes.
+
+<ParamField path="href" type="string">
+  The URL to link to
+</ParamField>
+
+<ParamField path="target" type="string" default="_blank">
+  Specify the target attribute for the link
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The text or content to display as the link
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the link. Default color is `#067df7` with no text decoration
+</ParamField>
+
+## Default Styles
+
+The `Link` component includes these default styles:
+- `color: #067df7` - Blue link color
+- `textDecorationLine: none` - No underline by default
+
+You can override these by passing your own styles.
+
+## Styling Example
+
+```jsx
+import { Link } from "@react-email/link";
+
+const Email = () => {
+  return (
+    <Link 
+      href="https://example.com"
+      style={{
+        color: "#8b5cf6",
+        textDecoration: "underline",
+      }}
+    >
+      Visit our website
+    </Link>
+  );
+};
+```
+
+## TypeScript
+
+```tsx
+export type LinkProps = Readonly<React.ComponentPropsWithoutRef<'a'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

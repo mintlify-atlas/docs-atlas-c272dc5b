@@ -1,0 +1,182 @@
+---
+title: Postmark
+description: Send emails with React Email using Postmark
+---
+
+Postmark is a fast and reliable transactional email service designed for applications. It focuses on deliverability and provides detailed analytics for your emails.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the Postmark SDK:
+    
+    ```bash
+    npm install react-email @react-email/components postmark
+    ```
+  </Step>
+  
+  <Step title="Set up your API key">
+    Get your Server API token from [Postmark](https://postmarkapp.com) and add it to your environment variables:
+    
+    ```bash
+    POSTMARK_API_KEY=your-server-token
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import { render } from '@react-email/components';
+import postmark from 'postmark';
+import { Email } from './email';
+
+const client = new postmark.ServerClient(process.env.POSTMARK_API_KEY || '');
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+const options = {
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+};
+
+await client.sendEmail(options);
+```
+
+## Advanced features
+
+### Multiple recipients
+
+```tsx
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user1@gmail.com, user2@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+});
+```
+
+### CC and BCC
+
+```tsx
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Cc: 'cc@example.com',
+  Bcc: 'bcc@example.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+});
+```
+
+### Plain text version
+
+```tsx
+import { render } from '@react-email/components';
+
+const emailHtml = await render(<Email url="https://example.com" />);
+const emailText = await render(<Email url="https://example.com" />, {
+  plainText: true,
+});
+
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+  TextBody: emailText,
+});
+```
+
+### Tags and metadata
+
+Postmark allows you to add tags and metadata for tracking:
+
+```tsx
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+  Tag: 'welcome-email',
+  Metadata: {
+    user_id: '12345',
+    campaign: 'onboarding',
+  },
+});
+```
+
+### Track opens and links
+
+```tsx
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+  TrackOpens: true,
+  TrackLinks: 'HtmlAndText',
+});
+```
+
+### Attachments
+
+```tsx
+import fs from 'fs';
+
+const attachment = fs.readFileSync('/path/to/file.pdf').toString('base64');
+
+await client.sendEmail({
+  From: 'you@example.com',
+  To: 'user@gmail.com',
+  Subject: 'hello world',
+  HtmlBody: emailHtml,
+  Attachments: [
+    {
+      Name: 'document.pdf',
+      Content: attachment,
+      ContentType: 'application/pdf',
+    },
+  ],
+});
+```
+
+## Error handling
+
+```tsx
+try {
+  const response = await client.sendEmail(options);
+  console.log('Email sent:', response.MessageID);
+} catch (error) {
+  console.error('Postmark error:', error.message);
+}
+```
+
+## Important notes
+
+- Postmark uses capitalized field names (e.g., `From`, `To`, `Subject`)
+- You need to verify your sender signature or domain before sending
+- Postmark focuses on transactional emails, not marketing emails

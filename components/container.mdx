@@ -1,0 +1,74 @@
+---
+title: 'Container'
+description: 'Container component that centers email content'
+---
+
+A layout component that centers all the email content with a maximum width.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/container -E
+```
+
+```bash yarn
+yarn add @react-email/container -E
+```
+
+```bash pnpm
+pnpm add @react-email/container -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Button } from "@react-email/button";
+import { Container } from "@react-email/container";
+
+const Email = () => {
+  return (
+    <Container>
+      <Button href="https://example.com" style={{ color: "#61dafb" }}>
+        Click me
+      </Button>
+    </Container>
+  );
+};
+```
+
+## Props
+
+The `Container` component accepts all standard HTML table attributes.
+
+<ParamField path="children" type="ReactNode">
+  The content to place inside the container
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the container. By default, the container has a `maxWidth` of `37.5em` (600px)
+</ParamField>
+
+## Default Styles
+
+The container has the following default styles:
+- Centered alignment (`align="center"`)
+- Maximum width of `37.5em` (approximately 600px)
+- Full width (`width="100%"`)
+
+## TypeScript
+
+```tsx
+export type ContainerProps = Readonly<React.ComponentPropsWithoutRef<'table'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

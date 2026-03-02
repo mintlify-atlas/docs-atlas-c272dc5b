@@ -1,0 +1,514 @@
+---
+title: 'Tailwind'
+description: 'Use Tailwind CSS utility classes in your email templates'
+---
+
+<Note>
+  The Tailwind component automatically handles CSS variable resolution, calc() expressions, and inlines styles for maximum email client compatibility.
+</Note>
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/tailwind tailwindcss
+```
+
+```bash yarn
+yarn add @react-email/tailwind tailwindcss
+```
+
+```bash pnpm
+pnpm add @react-email/tailwind tailwindcss
+```
+</CodeGroup>
+
+## Tailwind Component
+
+Wraps your email content to enable Tailwind CSS utility classes.
+
+```tsx
+import { Tailwind } from '@react-email/tailwind';
+import { Button } from '@react-email/button';
+import { Container } from '@react-email/container';
+
+export function Email() {
+  return (
+    <Tailwind>
+      <Container className="bg-white p-8">
+        <Button className="bg-blue-500 text-white px-4 py-2 rounded">
+          Click me
+        </Button>
+      </Container>
+    </Tailwind>
+  );
+}
+```
+
+### Props
+
+<ParamField path="children" type="React.ReactNode" required>
+  The email components to apply Tailwind styles to
+</ParamField>
+
+<ParamField path="config" type="TailwindConfig">
+  Custom Tailwind configuration. Accepts all Tailwind config options except `content`.
+  
+  <Expandable title="example">
+    ```tsx
+    <Tailwind
+      config={{
+        theme: {
+          extend: {
+            colors: {
+              brand: '#007291',
+            },
+          },
+        },
+      }}
+    >
+      {/* Your email content */}
+    </Tailwind>
+    ```
+  </Expandable>
+</ParamField>
+
+## Basic Usage
+
+```tsx
+import { Html } from '@react-email/html';
+import { Head } from '@react-email/head';
+import { Body } from '@react-email/body';
+import { Tailwind } from '@react-email/tailwind';
+import { Container } from '@react-email/container';
+import { Heading } from '@react-email/heading';
+import { Text } from '@react-email/text';
+
+export function WelcomeEmail({ name }: { name: string }) {
+  return (
+    <Html>
+      <Head />
+      <Tailwind>
+        <Body className="bg-gray-100 font-sans">
+          <Container className="bg-white mx-auto my-8 p-8 rounded-lg">
+            <Heading className="text-2xl font-bold text-gray-900 mb-4">
+              Welcome, {name}!
+            </Heading>
+            <Text className="text-gray-700 text-base mb-4">
+              Thank you for joining our platform.
+            </Text>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+}
+```
+
+## Custom Configuration
+
+### Using Custom Colors
+
+```tsx
+import { Tailwind } from '@react-email/tailwind';
+
+const customConfig = {
+  theme: {
+    extend: {
+      colors: {
+        primary: '#0070f3',
+        secondary: '#7928ca',
+      },
+    },
+  },
+};
+
+export function Email() {
+  return (
+    <Tailwind config={customConfig}>
+      <div className="bg-primary text-white p-4">
+        <h1 className="text-secondary">Custom Colors</h1>
+      </div>
+    </Tailwind>
+  );
+}
+```
+
+### Pixel-Based Preset
+
+For better email client compatibility, use the included `pixelBasedPreset` which converts rem/em values to pixels.
+
+```tsx
+import { Tailwind, pixelBasedPreset } from '@react-email/tailwind';
+
+export function Email() {
+  return (
+    <Tailwind config={pixelBasedPreset}>
+      <div className="text-base p-4">
+        {/* text-base = 16px, p-4 = 16px */}
+        Content with pixel values
+      </div>
+    </Tailwind>
+  );
+}
+```
+
+## Utility Functions
+
+### inlineStyles
+
+Manually extract and inline Tailwind styles for specific class names.
+
+```tsx
+import { inlineStyles, setupTailwind } from '@react-email/tailwind';
+
+const setup = await setupTailwind({});
+setup.addUtilities(['bg-blue-500', 'text-white', 'p-4']);
+const styleSheet = setup.getStyleSheet();
+
+const styles = inlineStyles(styleSheet, ['bg-blue-500', 'text-white']);
+// Returns: { backgroundColor: 'rgb(59 130 246)', color: 'rgb(255 255 255)' }
+```
+
+#### Parameters
+
+<ParamField path="styleSheet" type="StyleSheet" required>
+  The parsed Tailwind CSS stylesheet
+</ParamField>
+
+<ParamField path="classes" type="string[]" required>
+  Array of Tailwind class names to extract styles for
+</ParamField>
+
+#### Returns
+
+<ResponseField name="styles" type="Record<string, string>">
+  Object mapping CSS property names (camelCase) to their values
+</ResponseField>
+
+### sanitizeStyleSheet
+
+Processes a stylesheet to resolve CSS variables, calc() expressions, and sanitize declarations for email compatibility.
+
+```tsx
+import { sanitizeStyleSheet } from '@react-email/tailwind';
+import { parse } from 'css-tree';
+
+const styleSheet = parse('.example { color: var(--primary); }');
+sanitizeStyleSheet(styleSheet);
+// CSS variables and calc() expressions are now resolved
+```
+
+#### Parameters
+
+<ParamField path="styleSheet" type="StyleSheet" required>
+  The CSS stylesheet to sanitize (modifies in place)
+</ParamField>
+
+### setupTailwind
+
+Initializes Tailwind CSS compiler with custom configuration.
+
+```tsx
+import { setupTailwind } from '@react-email/tailwind';
+
+const tailwind = await setupTailwind({
+  theme: {
+    extend: {
+      colors: {
+        brand: '#FF0000',
+      },
+    },
+  },
+});
+
+// Add utilities for specific classes
+tailwind.addUtilities(['bg-brand', 'text-white']);
+
+// Get the compiled stylesheet
+const styleSheet = tailwind.getStyleSheet();
+```
+
+#### Parameters
+
+<ParamField path="config" type="TailwindConfig" required>
+  Tailwind configuration object (all options except `content`)
+</ParamField>
+
+#### Returns
+
+<ResponseField name="setup" type="TailwindSetup">
+  Object with methods:
+  - `addUtilities(candidates: string[]): void` - Compile styles for class names
+  - `getStyleSheet(): StyleSheet` - Get the parsed CSS stylesheet
+</ResponseField>
+
+## Email-Specific Considerations
+
+### CSS Variable Resolution
+
+The Tailwind component automatically resolves CSS variables (custom properties) since many email clients don't support them.
+
+```tsx
+// This class uses CSS variables internally
+<div className="bg-blue-500">
+  {/* Automatically converted to: backgroundColor: 'rgb(59 130 246)' */}
+</div>
+```
+
+### Style Inlining
+
+Styles are automatically inlined as much as possible. Non-inlinable styles (media queries, pseudo-classes) are placed in a `<style>` tag within `<head>`.
+
+```tsx
+import { Html } from '@react-email/html';
+import { Head } from '@react-email/head';
+import { Tailwind } from '@react-email/tailwind';
+
+export function Email() {
+  return (
+    <Html>
+      <Head /> {/* Required for non-inlinable styles */}
+      <Tailwind>
+        {/* Responsive classes need <Head> */}
+        <div className="w-full md:w-1/2">
+          Content
+        </div>
+      </Tailwind>
+    </Html>
+  );
+}
+```
+
+<Warning>
+  If you use responsive utilities (like `md:`, `lg:`) or hover states, you **must** include a `<Head>` component. The Tailwind component will throw an error if it can't find one.
+</Warning>
+
+### Supported Class Types
+
+<AccordionGroup>
+  <Accordion title="Fully Inlinable Classes">
+    These classes are converted to inline styles:
+    - Colors: `bg-blue-500`, `text-white`
+    - Spacing: `p-4`, `m-2`, `px-8`
+    - Typography: `text-lg`, `font-bold`
+    - Layout: `flex`, `block`, `inline`
+    - Sizing: `w-full`, `h-64`
+    - Borders: `border`, `border-gray-300`, `rounded-lg`
+  </Accordion>
+  
+  <Accordion title="Requires <Head> Tag">
+    These classes need a `<style>` tag in `<head>`:
+    - Media queries: `md:w-1/2`, `lg:text-xl`
+    - Hover states: `hover:bg-blue-600`
+    - Focus states: `focus:outline-none`
+    - Pseudo-elements: `before:content-['']`
+  </Accordion>
+</AccordionGroup>
+
+## Advanced Examples
+
+### Responsive Email Layout
+
+```tsx
+import { Html } from '@react-email/html';
+import { Head } from '@react-email/head';
+import { Body } from '@react-email/body';
+import { Tailwind } from '@react-email/tailwind';
+import { Container } from '@react-email/container';
+
+export function ResponsiveEmail() {
+  return (
+    <Html>
+      <Head />
+      <Tailwind>
+        <Body className="bg-gray-50">
+          <Container className="mx-auto p-4">
+            {/* Stack on mobile, side-by-side on desktop */}
+            <div className="w-full md:flex md:gap-4">
+              <div className="w-full md:w-1/2 bg-white p-6 mb-4 md:mb-0">
+                <h2 className="text-xl font-bold mb-2">Column 1</h2>
+                <p className="text-gray-600">Content</p>
+              </div>
+              <div className="w-full md:w-1/2 bg-white p-6">
+                <h2 className="text-xl font-bold mb-2">Column 2</h2>
+                <p className="text-gray-600">Content</p>
+              </div>
+            </div>
+          </Container>
+        </Body>
+      </Tailwind>
+    </Html>
+  );
+}
+```
+
+### Custom Theme
+
+```tsx
+import { Tailwind, type TailwindConfig } from '@react-email/tailwind';
+
+const brandConfig: TailwindConfig = {
+  theme: {
+    extend: {
+      colors: {
+        brand: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          500: '#0ea5e9',
+          900: '#0c4a6e',
+        },
+      },
+      fontFamily: {
+        sans: ['Inter', 'Arial', 'sans-serif'],
+      },
+    },
+  },
+};
+
+export function BrandedEmail() {
+  return (
+    <Tailwind config={brandConfig}>
+      <div className="bg-brand-50 font-sans">
+        <h1 className="text-brand-900">Hello</h1>
+        <button className="bg-brand-500 text-white px-6 py-3">
+          Action
+        </button>
+      </div>
+    </Tailwind>
+  );
+}
+```
+
+### Dark Mode Support
+
+```tsx
+import { Html } from '@react-email/html';
+import { Head } from '@react-email/head';
+import { Tailwind } from '@react-email/tailwind';
+
+export function DarkModeEmail() {
+  return (
+    <Html>
+      <Head />
+      <Tailwind>
+        <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-white p-8">
+          <h1 className="text-2xl mb-4">Adapts to Dark Mode</h1>
+          <p className="text-gray-700 dark:text-gray-300">
+            This email respects your email client's color scheme.
+          </p>
+        </div>
+      </Tailwind>
+    </Html>
+  );
+}
+```
+
+## TypeScript
+
+```tsx
+import { Tailwind, type TailwindConfig, type TailwindProps } from '@react-email/tailwind';
+import type { ReactNode } from 'react';
+
+interface EmailWrapperProps {
+  children: ReactNode;
+  config?: TailwindConfig;
+}
+
+function EmailWrapper({ children, config }: EmailWrapperProps) {
+  return (
+    <Tailwind config={config}>
+      {children}
+    </Tailwind>
+  );
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Always include <Head> for responsive classes">
+    Media queries and pseudo-classes require a `<head>` element to inject non-inlinable styles.
+    
+    ```tsx
+    <Html>
+      <Head /> {/* Required! */}
+      <Tailwind>
+        <div className="md:w-1/2">Content</div>
+      </Tailwind>
+    </Html>
+    ```
+  </Accordion>
+  
+  <Accordion title="Use pixel-based values for better compatibility">
+    Some email clients don't support rem/em units. Use the `pixelBasedPreset` or configure custom pixel values.
+    
+    ```tsx
+    import { Tailwind, pixelBasedPreset } from '@react-email/tailwind';
+    
+    <Tailwind config={pixelBasedPreset}>
+      <div className="text-base"> {/* 16px instead of 1rem */}
+        Content
+      </div>
+    </Tailwind>
+    ```
+  </Accordion>
+  
+  <Accordion title="Prefer simple layouts">
+    Email clients have limited CSS support. Stick to simple flexbox/table layouts and avoid complex positioning.
+    
+    ```tsx
+    // Good: Simple flex layout
+    <div className="flex gap-4">
+      <div className="flex-1">Column 1</div>
+      <div className="flex-1">Column 2</div>
+    </div>
+    
+    // Avoid: Complex grid or absolute positioning
+    <div className="grid grid-cols-3 gap-4 relative">
+      <div className="absolute top-0 left-0">...</div>
+    </div>
+    ```
+  </Accordion>
+  
+  <Accordion title="Test across email clients">
+    Tailwind classes are converted to inline styles, but rendering can vary. Test your emails in multiple clients (Gmail, Outlook, Apple Mail, etc.).
+  </Accordion>
+</AccordionGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Error: Cannot find <head> element">
+    This error occurs when using non-inlinable classes (media queries, hover states) without a `<Head>` component.
+    
+    **Solution**: Add `<Head />` inside your email structure:
+    
+    ```tsx
+    import { Head } from '@react-email/head';
+    
+    <Html>
+      <Head />
+      <Tailwind>
+        {/* Your content */}
+      </Tailwind>
+    </Html>
+    ```
+  </Accordion>
+  
+  <Accordion title="Styles not applying">
+    Make sure:
+    1. The `className` prop is supported by the component
+    2. Class names are spelled correctly
+    3. Custom classes are defined in your config
+    
+    ```tsx
+    // Verify component supports className
+    import { Button } from '@react-email/button';
+    
+    <Button className="bg-blue-500"> {/* ✓ Supported */}
+      Click
+    </Button>
+    ```
+  </Accordion>
+</AccordionGroup>

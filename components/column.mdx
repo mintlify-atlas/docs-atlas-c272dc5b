@@ -1,0 +1,84 @@
+---
+title: 'Column'
+description: 'Column component for vertical content areas'
+---
+
+Display a column that separates content areas vertically in your email.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/column -E
+```
+
+```bash yarn
+yarn add @react-email/column -E
+```
+
+```bash pnpm
+pnpm add @react-email/column -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Row } from '@react-email/row';
+import { Column } from '@react-email/column';
+
+const Email = () => {
+  return (
+    <Row>
+      <Column>A</Column>
+      <Column>B</Column>
+      <Column>C</Column>
+    </Row>
+  );
+};
+```
+
+## Props
+
+The `Column` component accepts all standard HTML table cell (`<td>`) attributes.
+
+<ParamField path="children" type="ReactNode">
+  The content to place inside the column
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the column. You can control width, alignment, padding, and other styles
+</ParamField>
+
+## Example with Custom Widths
+
+```jsx
+import { Row } from '@react-email/row';
+import { Column } from '@react-email/column';
+
+const Email = () => {
+  return (
+    <Row>
+      <Column style={{ width: '33%' }}>Left</Column>
+      <Column style={{ width: '34%' }}>Center</Column>
+      <Column style={{ width: '33%' }}>Right</Column>
+    </Row>
+  );
+};
+```
+
+## TypeScript
+
+```tsx
+export type ColumnProps = Readonly<React.ComponentPropsWithoutRef<'td'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

@@ -1,0 +1,271 @@
+---
+title: Installation
+description: Install React Email in your project
+---
+
+## Prerequisites
+
+<Info>
+  React Email requires **Node.js 20.0.0** or higher and works with **React 18+** or **React 19+**.
+</Info>
+
+Before installing React Email, make sure you have:
+
+- Node.js 20.0.0 or higher
+- A package manager (npm, yarn, or pnpm)
+- React 18+ or React 19+ in your project
+
+## Quick Start with CLI
+
+The fastest way to get started is with the `create-email` CLI tool:
+
+<CodeGroup>
+
+```bash npm
+npx create-email
+```
+
+```bash yarn
+yarn create email
+```
+
+```bash pnpm
+pnpm create email
+```
+
+</CodeGroup>
+
+This creates a new `emails` folder with example email templates and sets up the development environment.
+
+## Install Component Library
+
+To add React Email to an existing project, install the components package:
+
+<CodeGroup>
+
+```bash npm
+npm install @react-email/components
+```
+
+```bash yarn
+yarn add @react-email/components
+```
+
+```bash pnpm
+pnpm add @react-email/components
+```
+
+</CodeGroup>
+
+<Note>
+  The `-E` flag is recommended to install exact versions and avoid potential compatibility issues:
+  
+  ```bash
+  npm install @react-email/components -E
+  ```
+</Note>
+
+### What's Included
+
+The `@react-email/components` package includes all React Email components in one convenient package:
+
+<AccordionGroup>
+  <Accordion title="Layout Components">
+    - **Html** - Root email component
+    - **Head** - Email head section
+    - **Body** - Email body wrapper
+    - **Container** - Center content with max-width
+    - **Section** - Group elements together
+    - **Row** & **Column** - Grid layout system
+  </Accordion>
+  
+  <Accordion title="Content Components">
+    - **Text** - Paragraph text
+    - **Heading** - Headings (h1-h6)
+    - **Button** - Styled link button
+    - **Link** - Hyperlinks
+    - **Img** - Images
+    - **Hr** - Horizontal divider
+  </Accordion>
+  
+  <Accordion title="Advanced Components">
+    - **Preview** - Email preview text
+    - **Font** - Custom font loading
+    - **CodeBlock** - Syntax highlighted code
+    - **CodeInline** - Inline code
+    - **Markdown** - Render markdown content
+    - **Tailwind** - Tailwind CSS support
+  </Accordion>
+  
+  <Accordion title="Utilities">
+    - **render** - Convert React to HTML
+  </Accordion>
+</AccordionGroup>
+
+## Install Individual Packages
+
+You can also install components individually if you prefer a smaller bundle:
+
+<CodeGroup>
+
+```bash Button Only
+npm install @react-email/button
+```
+
+```bash Multiple Components
+npm install @react-email/html @react-email/button @react-email/text
+```
+
+```bash With Render
+npm install @react-email/button @react-email/render
+```
+
+</CodeGroup>
+
+<Tip>
+  Installing individual packages gives you more control over your dependencies, but using `@react-email/components` is simpler and ensures all components work together.
+</Tip>
+
+## Install the Render Package
+
+The render package converts React components to HTML. It's included in `@react-email/components`, but can be installed separately:
+
+<CodeGroup>
+
+```bash npm
+npm install @react-email/render
+```
+
+```bash yarn
+yarn add @react-email/render
+```
+
+```bash pnpm
+pnpm add @react-email/render
+```
+
+</CodeGroup>
+
+<Info>
+  The render package works across multiple environments including Node.js, Edge runtimes (Vercel, Cloudflare Workers), Deno, and browsers.
+</Info>
+
+## Install Development Tools
+
+For local development with live preview, install the React Email CLI:
+
+<CodeGroup>
+
+```bash npm (global)
+npm install -g react-email
+```
+
+```bash npx (no install)
+npx react-email dev
+```
+
+```bash pnpm
+pnpm add -D react-email
+```
+
+</CodeGroup>
+
+### CLI Commands
+
+<ResponseField name="email dev" type="command">
+  Start the development server with live preview
+  
+  ```bash
+  npx react-email dev
+  ```
+</ResponseField>
+
+<ResponseField name="email export" type="command">
+  Export emails to static HTML files in an `out` directory
+  
+  ```bash
+  npx react-email export
+  ```
+</ResponseField>
+
+## Peer Dependencies
+
+React Email requires React and React DOM as peer dependencies:
+
+<CodeGroup>
+
+```bash React 18
+npm install react@^18 react-dom@^18
+```
+
+```bash React 19
+npm install react@^19 react-dom@^19
+```
+
+</CodeGroup>
+
+## Verify Installation
+
+Create a simple test file to verify everything is working:
+
+```tsx emails/test.tsx
+import { Html, Button } from '@react-email/components';
+
+export default function TestEmail() {
+  return (
+    <Html>
+      <Button href="https://example.com">Test Button</Button>
+    </Html>
+  );
+}
+```
+
+Then start the dev server:
+
+```bash
+npx react-email dev
+```
+
+<Check>
+  If installation was successful, you should see your email in the browser at `http://localhost:3000`
+</Check>
+
+## TypeScript Support
+
+React Email is built with TypeScript and includes type definitions out of the box. No additional `@types` packages are needed.
+
+```tsx
+import type { FC } from 'react';
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+const Email: FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Quickstart Guide"
+    icon="rocket"
+    href="/quickstart"
+  >
+    Build your first email template with React Email
+  </Card>
+  <Card
+    title="Component Reference"
+    icon="book"
+    href="/components/overview"
+  >
+    Explore all available components and their props
+  </Card>
+</CardGroup>

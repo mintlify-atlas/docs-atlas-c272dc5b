@@ -1,0 +1,65 @@
+---
+title: Integrations
+description: Send emails with React Email using popular email service providers
+---
+
+React Email can be integrated with any email service provider. The `render()` function converts your React components into HTML that can be sent through your preferred email service.
+
+## How it works
+
+React Email provides a `render()` function that converts your email components into HTML strings. You can then use this HTML with any email service provider's SDK:
+
+```tsx
+import { render } from '@react-email/components';
+import { MyEmail } from './emails/my-email';
+
+const emailHtml = await render(<MyEmail name="John" />);
+
+// Use emailHtml with any email provider
+```
+
+## Available integrations
+
+<CardGroup cols={2}>
+  <Card title="Resend" icon="paper-plane" href="/integrations/resend">
+    Modern email API for developers with built-in React Email support
+  </Card>
+  
+  <Card title="Nodemailer" icon="envelope" href="/integrations/nodemailer">
+    Popular Node.js module for sending emails via SMTP
+  </Card>
+  
+  <Card title="SendGrid" icon="grid" href="/integrations/sendgrid">
+    Reliable email delivery platform with powerful APIs
+  </Card>
+  
+  <Card title="Postmark" icon="stamp" href="/integrations/postmark">
+    Fast and reliable transactional email service
+  </Card>
+  
+  <Card title="AWS SES" icon="aws" href="/integrations/aws-ses">
+    Amazon's scalable email sending service
+  </Card>
+  
+  <Card title="Plunk" icon="bolt" href="/integrations/plunk">
+    Simple and affordable email API
+  </Card>
+  
+  <Card title="Scaleway" icon="server" href="/integrations/scaleway">
+    European cloud platform with transactional email
+  </Card>
+  
+  <Card title="MailerSend" icon="paper-plane-top" href="/integrations/mailersend">
+    Email delivery service with advanced analytics
+  </Card>
+</CardGroup>
+
+## Custom integrations
+
+You can integrate React Email with any email service by:
+
+1. Creating your email component
+2. Using `render()` to convert it to HTML
+3. Passing the HTML to your email provider's SDK
+
+All email providers that accept HTML emails are compatible with React Email.

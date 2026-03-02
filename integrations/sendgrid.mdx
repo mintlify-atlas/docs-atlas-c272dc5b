@@ -1,0 +1,158 @@
+---
+title: SendGrid
+description: Send emails with React Email using SendGrid
+---
+
+SendGrid is a popular email delivery platform that provides reliable email sending with powerful APIs and comprehensive analytics.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the SendGrid SDK:
+    
+    ```bash
+    npm install react-email @react-email/components @sendgrid/mail
+    ```
+  </Step>
+  
+  <Step title="Set up your API key">
+    Get your API key from [SendGrid](https://sendgrid.com) and add it to your environment variables:
+    
+    ```bash
+    SENDGRID_API_KEY=SG.xxx
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import { render } from '@react-email/components';
+import sendgrid from '@sendgrid/mail';
+import { Email } from './email';
+
+sendgrid.setApiKey(process.env.SENDGRID_API_KEY || '');
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+const options = {
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+};
+
+await sendgrid.send(options);
+```
+
+## Advanced features
+
+### Multiple recipients
+
+```tsx
+await sendgrid.send({
+  from: 'you@example.com',
+  to: ['user1@gmail.com', 'user2@gmail.com'],
+  subject: 'hello world',
+  html: emailHtml,
+});
+```
+
+### CC and BCC
+
+```tsx
+await sendgrid.send({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  cc: 'cc@example.com',
+  bcc: ['bcc1@example.com', 'bcc2@example.com'],
+  subject: 'hello world',
+  html: emailHtml,
+});
+```
+
+### Custom headers
+
+```tsx
+await sendgrid.send({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+  headers: {
+    'X-Custom-Header': 'Custom Value',
+  },
+});
+```
+
+### Attachments
+
+```tsx
+import fs from 'fs';
+
+const attachment = fs.readFileSync('/path/to/file.pdf').toString('base64');
+
+await sendgrid.send({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+  attachments: [
+    {
+      content: attachment,
+      filename: 'document.pdf',
+      type: 'application/pdf',
+      disposition: 'attachment',
+    },
+  ],
+});
+```
+
+### Scheduled sending
+
+```tsx
+const sendAt = Math.floor(Date.now() / 1000) + 3600; // 1 hour from now
+
+await sendgrid.send({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+  sendAt: sendAt,
+});
+```
+
+## Error handling
+
+```tsx
+try {
+  await sendgrid.send(options);
+  console.log('Email sent successfully');
+} catch (error) {
+  console.error('SendGrid error:', error);
+  if (error.response) {
+    console.error(error.response.body);
+  }
+}
+```

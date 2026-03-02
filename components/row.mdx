@@ -1,0 +1,87 @@
+---
+title: 'Row'
+description: 'Row component for horizontal layout'
+---
+
+A React row component for creating horizontal layouts in emails.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/row -E
+```
+
+```bash yarn
+yarn add @react-email/row -E
+```
+
+```bash pnpm
+pnpm add @react-email/row -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Section } from "@react-email/section";
+import { Row } from "@react-email/row";
+import { Column } from "@react-email/column";
+
+const Email = () => {
+  return (
+    <Section>
+      <Row>
+        <Column>A</Column>
+      </Row>
+      <Row>
+        <Column>B</Column>
+      </Row>
+      <Row>
+        <Column>C</Column>
+      </Row>
+    </Section>
+  );
+};
+```
+
+## Props
+
+The `Row` component accepts all standard HTML table attributes.
+
+<ParamField path="children" type="ReactNode" required>
+  The content to place inside the row, typically Column components
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the row
+</ParamField>
+
+## Implementation Details
+
+The `Row` component renders as a table with:
+- Centered alignment
+- Full width (`100%`)
+- No border, cellPadding, or cellSpacing
+- `role="presentation"` for accessibility
+- Children wrapped in a table row (`<tr>`)
+
+## TypeScript
+
+```tsx
+export type RowProps = Readonly<
+  React.ComponentPropsWithoutRef<'table'> & {
+    children: React.ReactNode;
+  }
+>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

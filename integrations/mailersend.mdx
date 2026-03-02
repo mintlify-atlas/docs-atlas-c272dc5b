@@ -1,0 +1,207 @@
+---
+title: MailerSend
+description: Send emails with React Email using MailerSend
+---
+
+MailerSend is an email delivery service with advanced analytics, template management, and deliverability tools designed for developers.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the MailerSend SDK:
+    
+    ```bash
+    npm install react-email @react-email/components mailersend
+    ```
+  </Step>
+  
+  <Step title="Set up your API key">
+    Get your API key from [MailerSend](https://www.mailersend.com) and add it to your environment variables:
+    
+    ```bash
+    MAILERSEND_API_KEY=your-api-key
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import { render } from '@react-email/components';
+import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
+import { Email } from './email';
+
+const mailerSend = new MailerSend({
+  apiKey: process.env.MAILERSEND_API_KEY || '',
+});
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+const sentFrom = new Sender('you@yourdomain.com', 'Your name');
+const recipients = [new Recipient('your@client.com', 'Your Client')];
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml);
+
+await mailerSend.email.send(emailParams);
+```
+
+## Advanced features
+
+### Multiple recipients
+
+```tsx
+const recipients = [
+  new Recipient('user1@example.com', 'User One'),
+  new Recipient('user2@example.com', 'User Two'),
+];
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml);
+```
+
+### CC and BCC
+
+```tsx
+const cc = [new Recipient('cc@example.com', 'CC User')];
+const bcc = [new Recipient('bcc@example.com', 'BCC User')];
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setCc(cc)
+  .setBcc(bcc)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml);
+```
+
+### Plain text version
+
+```tsx
+import { render } from '@react-email/components';
+
+const emailHtml = await render(<Email url="https://example.com" />);
+const emailText = await render(<Email url="https://example.com" />, {
+  plainText: true,
+});
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml)
+  .setText(emailText);
+```
+
+### Reply-to address
+
+```tsx
+const replyTo = new Recipient('reply@yourdomain.com', 'Reply Name');
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setReplyTo(replyTo)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml);
+```
+
+### Attachments
+
+```tsx
+import fs from 'fs';
+import { Attachment } from 'mailersend';
+
+const attachment = fs.readFileSync('/path/to/file.pdf').toString('base64');
+
+const attachments = [
+  new Attachment(attachment, 'document.pdf', 'attachment'),
+];
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml)
+  .setAttachments(attachments);
+```
+
+### Tags and personalization
+
+```tsx
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setSubject('This is a Subject')
+  .setHtml(emailHtml)
+  .setTags(['welcome', 'onboarding']);
+```
+
+### Template variables
+
+If you want to use MailerSend's template system instead of React Email:
+
+```tsx
+import { EmailParams, MailerSend, Recipient, Sender } from 'mailersend';
+
+const emailParams = new EmailParams()
+  .setFrom(sentFrom)
+  .setTo(recipients)
+  .setTemplateId('template-id')
+  .setVariables([
+    {
+      email: 'your@client.com',
+      substitutions: [
+        {
+          var: 'name',
+          value: 'John',
+        },
+      ],
+    },
+  ]);
+```
+
+## Error handling
+
+```tsx
+try {
+  const response = await mailerSend.email.send(emailParams);
+  console.log('Email sent:', response);
+} catch (error) {
+  console.error('MailerSend error:', error);
+}
+```
+
+## Important notes
+
+- **Domain verification**: Verify your sending domain in the MailerSend dashboard
+- **Object-based API**: MailerSend uses classes like `Sender`, `Recipient`, and `EmailParams`
+- **Analytics**: MailerSend provides detailed analytics on email delivery and engagement
+- **Template system**: You can use MailerSend templates or React Email components

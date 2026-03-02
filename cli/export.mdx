@@ -1,0 +1,313 @@
+---
+title: email export
+description: Export email templates as static HTML or plain text files
+---
+
+The `export` command renders your email templates to static HTML or plain text files, ready for use in your application or email service.
+
+## Usage
+
+```bash
+email export [options]
+```
+
+## Options
+
+<ParamField path="--dir" type="string" default="./emails">
+  Directory containing your email templates.
+  
+  ```bash
+  email export --dir ./src/emails
+  ```
+</ParamField>
+
+<ParamField path="--outDir" type="string" default="out">
+  Output directory where rendered templates will be saved.
+  
+  ```bash
+  email export --outDir ./dist/emails
+  ```
+</ParamField>
+
+<ParamField path="--pretty" type="boolean" default="false">
+  Pretty print the HTML output with proper indentation.
+  
+  ```bash
+  email export --pretty
+  ```
+</ParamField>
+
+<ParamField path="--plainText" type="boolean" default="false">
+  Export templates as plain text (.txt) instead of HTML (.html).
+  
+  ```bash
+  email export --plainText
+  ```
+</ParamField>
+
+<ParamField path="--silent" type="boolean" default="false">
+  Suppress progress indicators and status messages.
+  
+  ```bash
+  email export --silent
+  ```
+</ParamField>
+
+## Examples
+
+### Basic Export
+
+Export all templates to the default `out` directory:
+
+```bash
+email export
+```
+
+Output:
+```
+✔ Preparing files...
+✔ Rendered all files
+✔ Copying static files
+out
+├── welcome.html
+├── reset-password.html
+└── static
+    └── logo.png
+✔ Successfully exported emails
+```
+
+### Pretty Printed HTML
+
+Export with formatted, readable HTML:
+
+```bash
+email export --pretty
+```
+
+This adds proper indentation and line breaks to the output HTML, making it easier to read and debug.
+
+### Plain Text Export
+
+Export templates as plain text files:
+
+```bash
+email export --plainText
+```
+
+Output:
+```
+out
+├── welcome.txt
+└── reset-password.txt
+```
+
+Useful for generating plain text versions of your emails for better email client compatibility.
+
+### Custom Output Directory
+
+Export to a specific directory:
+
+```bash
+email export --outDir ./build/email-templates
+```
+
+### Silent Mode
+
+Export without progress indicators (useful for CI/CD):
+
+```bash
+email export --silent
+```
+
+### Combined Options
+
+Export with multiple options:
+
+```bash
+email export --dir ./src/emails --outDir ./dist --pretty
+```
+
+## How It Works
+
+The export command:
+
+1. **Scans** the email directory for all template files
+2. **Bundles** each template using esbuild with JSX transformation
+3. **Renders** templates to HTML using React Email's render function
+4. **Writes** the rendered output to the specified directory
+5. **Copies** static assets from `emails/static` to `out/static`
+6. **Cleans up** temporary build artifacts
+
+## Output Structure
+
+Given this input structure:
+
+```
+emails/
+├── welcome.tsx
+├── notifications/
+│   ├── comment.tsx
+│   └── mention.tsx
+└── static/
+    └── logo.png
+```
+
+The export creates:
+
+```
+out/
+├── welcome.html
+├── notifications/
+│   ├── comment.html
+│   └── mention.html
+└── static/
+    └── logo.png
+```
+
+The directory structure is preserved, and static assets are copied automatically.
+
+## Using Exported Templates
+
+### Node.js
+
+Read and send exported templates:
+
+```js
+import fs from 'fs';
+import nodemailer from 'nodemailer';
+
+const html = fs.readFileSync('./out/welcome.html', 'utf-8');
+
+await transporter.sendMail({
+  to: 'user@example.com',
+  subject: 'Welcome!',
+  html,
+});
+```
+
+### Resend
+
+```js
+import { Resend } from 'resend';
+import fs from 'fs';
+
+const resend = new Resend('re_123456789');
+const html = fs.readFileSync('./out/welcome.html', 'utf-8');
+
+await resend.emails.send({
+  from: 'onboarding@resend.dev',
+  to: 'user@example.com',
+  subject: 'Welcome!',
+  html,
+});
+```
+
+### Sendgrid
+
+```js
+import sgMail from '@sendgrid/mail';
+import fs from 'fs';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+const html = fs.readFileSync('./out/welcome.html', 'utf-8');
+
+await sgMail.send({
+  to: 'user@example.com',
+  from: 'sender@example.com',
+  subject: 'Welcome!',
+  html,
+});
+```
+
+## Build Process
+
+The export command uses esbuild for fast, efficient bundling:
+
+- **Bundles** all dependencies into single files
+- **Transforms** JSX to JavaScript
+- **Handles** TypeScript automatically
+- **Resolves** imports and path aliases
+- **Optimizes** for production
+
+## Pretty vs Minified
+
+### Default (Minified)
+
+```html
+<!DOCTYPE html><html><head><meta charset="utf-8"/></head><body><h1>Welcome</h1></body></html>
+```
+
+### With --pretty
+
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+  </head>
+  <body>
+    <h1>Welcome</h1>
+  </body>
+</html>
+```
+
+Use `--pretty` during development and debugging. Use minified output in production for smaller file sizes.
+
+## CI/CD Integration
+
+Use export in your build pipeline:
+
+```yaml .github/workflows/build.yml
+name: Build Emails
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+      - run: npm install
+      - run: npx email export --silent
+      - uses: actions/upload-artifact@v2
+        with:
+          name: email-templates
+          path: out/
+```
+
+## Troubleshooting
+
+### Missing Templates
+
+If templates aren't being exported:
+
+1. Ensure they're in the correct directory (default: `./emails`)
+2. Check that files have valid extensions (.tsx, .ts, .jsx, .js)
+3. Verify templates export a default React component
+
+### Build Errors
+
+If you see build errors:
+
+1. Check for syntax errors in your templates
+2. Ensure all imports are valid
+3. Verify that dependencies are installed
+
+### Static Files Not Copied
+
+If static assets are missing:
+
+1. Ensure they're in `emails/static/` directory
+2. Check that the export completed successfully
+3. Look for the `static/` folder in your output directory
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Development Server" icon="code" href="/cli/dev">
+    Preview templates while developing
+  </Card>
+  <Card title="Build Preview App" icon="hammer" href="/cli/build">
+    Build the preview app for production
+  </Card>
+</CardGroup>

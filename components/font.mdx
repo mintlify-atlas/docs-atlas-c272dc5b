@@ -1,0 +1,151 @@
+---
+title: 'Font'
+description: 'Component to set custom font family'
+---
+
+A React Font component to set your font family for the entire email.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/font -E
+```
+
+```bash yarn
+yarn add @react-email/font -E
+```
+
+```bash pnpm
+pnpm add @react-email/font -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template inside the `<Head>` component.
+
+```jsx
+import { Html } from "@react-email/html";
+import { Head } from "@react-email/head";
+import { Font } from "@react-email/font";
+
+const Email = () => {
+  return (
+    <Html lang="en">
+      <Head>
+        <Font
+          fontFamily="Roboto"
+          fallbackFontFamily="Verdana"
+          webFont={{
+            url: "https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2",
+            format: "woff2",
+          }}
+        />
+      </Head>
+    </Html>
+  );
+};
+```
+
+## Props
+
+<ParamField path="fontFamily" type="string" required>
+  The font you want to use. Note: Do not insert multiple fonts here, use `fallbackFontFamily` for that
+</ParamField>
+
+<ParamField path="fallbackFontFamily" type="FallbackFont | FallbackFont[]" required>
+  Fallback font(s) to use when the primary font is unavailable. Can be a single font or an array (order determines priority)
+</ParamField>
+
+<ParamField path="webFont" type="object">
+  Web font configuration for loading custom fonts. Not all email clients support web fonts - check [caniemail.com](https://www.caniemail.com/features/css-at-font-face/) for support
+  - `url` (string): The URL to the font file
+  - `format` (FontFormat): The font format (e.g., `"woff"`, `"woff2"`, `"truetype"`, etc.)
+</ParamField>
+
+<ParamField path="fontStyle" type="FontStyle" default="normal">
+  The font style (e.g., `"normal"`, `"italic"`)
+</ParamField>
+
+<ParamField path="fontWeight" type="FontWeight" default="400">
+  The font weight (e.g., `400`, `700`, `"bold"`)
+</ParamField>
+
+## Fallback Font Options
+
+The following fallback fonts are supported:
+- `Arial`
+- `Helvetica`
+- `Verdana`
+- `Georgia`
+- `Times New Roman`
+- `serif`
+- `sans-serif`
+- `monospace`
+- `cursive`
+- `fantasy`
+
+## Font Format Options
+
+- `woff`
+- `woff2`
+- `truetype`
+- `opentype`
+- `embedded-opentype`
+- `svg`
+
+## Example with Multiple Fallbacks
+
+```jsx
+import { Font } from "@react-email/font";
+
+const Email = () => {
+  return (
+    <Head>
+      <Font
+        fontFamily="Inter"
+        fallbackFontFamily={["Arial", "Helvetica", "sans-serif"]}
+        webFont={{
+          url: "https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2",
+          format: "woff2",
+        }}
+        fontWeight={400}
+      />
+    </Head>
+  );
+};
+```
+
+## Important Notes
+
+<Warning>
+The Font component MUST be placed inside the `<Head>` tag.
+</Warning>
+
+<Info>
+Not all email clients support web fonts. For clients that don't support them, the fallback font will be used instead. Always test your emails across different clients.
+</Info>
+
+## TypeScript
+
+```tsx
+export interface FontProps {
+  fontFamily: string;
+  fallbackFontFamily: FallbackFont | FallbackFont[];
+  webFont?: {
+    url: string;
+    format: FontFormat;
+  };
+  fontStyle?: FontStyle;
+  fontWeight?: FontWeight;
+}
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

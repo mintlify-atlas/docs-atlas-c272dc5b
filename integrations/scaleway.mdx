@@ -1,0 +1,256 @@
+---
+title: Scaleway
+description: Send emails with React Email using Scaleway Transactional Email
+---
+
+Scaleway is a European cloud computing platform that offers transactional email services. It provides reliable email delivery with a focus on data sovereignty and privacy.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the Scaleway SDK:
+    
+    ```bash
+    npm install react-email @react-email/components @scaleway/sdk
+    ```
+  </Step>
+  
+  <Step title="Set up your credentials">
+    Get your credentials from [Scaleway](https://www.scaleway.com) and add them to your environment variables:
+    
+    ```bash
+    ACCESS_KEY=your-access-key
+    SECRET_KEY=your-secret-key
+    PROJECT_ID=your-project-id
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+  username: string;
+  teamName: string;
+  invitedByUsername: string;
+  invitedByEmail: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({
+  url,
+  username,
+  teamName,
+  invitedByUsername,
+  invitedByEmail,
+}) => {
+  return (
+    <Html lang="en">
+      <h1>Welcome to {teamName}</h1>
+      <p>
+        {invitedByUsername} ({invitedByEmail}) has invited you to join {teamName}.
+      </p>
+      <Button href={url}>Accept invitation</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import { render } from '@react-email/components';
+import { createClient, TransactionalEmail } from '@scaleway/sdk';
+import { Email } from './email';
+
+const client = createClient({
+  accessKey: process.env.ACCESS_KEY,
+  secretKey: process.env.SECRET_KEY,
+  defaultProjectId: process.env.PROJECT_ID,
+  defaultRegion: 'fr-par',
+  defaultZone: 'fr-par-1',
+});
+
+const transactionalEmailClient = new TransactionalEmail.v1alpha1.API(client);
+
+const emailHtml = await render(
+  <Email
+    invitedByEmail="sender@example.com"
+    invitedByUsername="Alice"
+    teamName="Acme Corp"
+    url="https://www.example.com/join"
+    username="Bob"
+  />,
+);
+
+await transactionalEmailClient.createEmail({
+  from: {
+    email: 'noreply@yourdomain.com',
+    name: 'Your Company',
+  },
+  to: [
+    {
+      email: 'user@example.com',
+      name: 'Bob',
+    },
+  ],
+  subject: 'You have been invited to join a team',
+  text: '',
+  html: emailHtml,
+});
+```
+
+## Advanced features
+
+### Multiple recipients
+
+```tsx
+await transactionalEmailClient.createEmail({
+  from: {
+    email: 'noreply@yourdomain.com',
+    name: 'Your Company',
+  },
+  to: [
+    {
+      email: 'user1@example.com',
+      name: 'User One',
+    },
+    {
+      email: 'user2@example.com',
+      name: 'User Two',
+    },
+  ],
+  subject: 'Hello',
+  text: '',
+  html: emailHtml,
+});
+```
+
+### CC and BCC
+
+```tsx
+await transactionalEmailClient.createEmail({
+  from: {
+    email: 'noreply@yourdomain.com',
+    name: 'Your Company',
+  },
+  to: [
+    {
+      email: 'user@example.com',
+      name: 'User',
+    },
+  ],
+  cc: [
+    {
+      email: 'cc@example.com',
+    },
+  ],
+  bcc: [
+    {
+      email: 'bcc@example.com',
+    },
+  ],
+  subject: 'Hello',
+  text: '',
+  html: emailHtml,
+});
+```
+
+### Plain text version
+
+```tsx
+import { render } from '@react-email/components';
+
+const emailHtml = await render(<Email {...props} />);
+const emailText = await render(<Email {...props} />, {
+  plainText: true,
+});
+
+await transactionalEmailClient.createEmail({
+  from: {
+    email: 'noreply@yourdomain.com',
+    name: 'Your Company',
+  },
+  to: [
+    {
+      email: 'user@example.com',
+      name: 'User',
+    },
+  ],
+  subject: 'Hello',
+  text: emailText,
+  html: emailHtml,
+});
+```
+
+### Attachments
+
+```tsx
+import fs from 'fs';
+
+const attachment = fs.readFileSync('/path/to/file.pdf').toString('base64');
+
+await transactionalEmailClient.createEmail({
+  from: {
+    email: 'noreply@yourdomain.com',
+    name: 'Your Company',
+  },
+  to: [
+    {
+      email: 'user@example.com',
+      name: 'User',
+    },
+  ],
+  subject: 'Document attached',
+  text: '',
+  html: emailHtml,
+  attachments: [
+    {
+      name: 'document.pdf',
+      type: 'application/pdf',
+      content: attachment,
+    },
+  ],
+});
+```
+
+## Regions
+
+Scaleway operates in multiple regions. You can specify your preferred region:
+
+```tsx
+const client = createClient({
+  accessKey: process.env.ACCESS_KEY,
+  secretKey: process.env.SECRET_KEY,
+  defaultProjectId: process.env.PROJECT_ID,
+  defaultRegion: 'fr-par', // Paris, France
+  defaultZone: 'fr-par-1',
+});
+```
+
+Available regions:
+- `fr-par` - Paris, France
+- `nl-ams` - Amsterdam, Netherlands
+- `pl-waw` - Warsaw, Poland
+
+## Error handling
+
+```tsx
+try {
+  const response = await transactionalEmailClient.createEmail(params);
+  console.log('Email sent:', response);
+} catch (error) {
+  console.error('Scaleway error:', error);
+}
+```
+
+## Important notes
+
+- **European focus**: Scaleway is based in Europe and focuses on data sovereignty
+- **Domain verification**: Verify your sending domain in the Scaleway console
+- **v1alpha1 API**: The API is currently in alpha, so features may change

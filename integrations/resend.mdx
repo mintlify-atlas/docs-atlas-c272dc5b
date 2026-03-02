@@ -1,0 +1,151 @@
+---
+title: Resend
+description: Send emails with React Email using Resend
+---
+
+Resend is a modern email API built for developers. It has native support for React Email and provides a simple API for sending transactional emails.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the Resend SDK:
+    
+    ```bash
+    npm install react-email @react-email/components resend
+    ```
+  </Step>
+  
+  <Step title="Set up your API key">
+    Get your API key from [Resend](https://resend.com) and add it to your environment variables:
+    
+    ```bash
+    RESEND_API_KEY=re_...
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+First, create your email template using React Email components:
+
+```tsx emails/waitlist.tsx
+import {
+  Body,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Text,
+} from '@react-email/components';
+
+interface WaitlistEmailProps {
+  name: string;
+}
+
+export const WaitlistEmail: React.FC<Readonly<WaitlistEmailProps>> = ({
+  name,
+}) => (
+  <Html>
+    <Head />
+    <Body style={main}>
+      <Preview>
+        Thank you for joining our waitlist and for your patience
+      </Preview>
+      <Container style={container}>
+        <Heading style={h1}>Coming Soon.</Heading>
+        <Text style={text}>
+          Thank you {name} for joining our waitlist and for your patience. We
+          will send you a note when we have something new to share.
+        </Text>
+      </Container>
+    </Body>
+  </Html>
+);
+
+const main = {
+  backgroundColor: '#000000',
+  margin: '0 auto',
+  fontFamily:
+    "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif",
+};
+
+const container = {
+  margin: 'auto',
+  padding: '96px 20px 64px',
+};
+
+const h1 = {
+  color: '#ffffff',
+  fontSize: '24px',
+  fontWeight: '600',
+  lineHeight: '40px',
+  margin: '0 0 20px',
+};
+
+const text = {
+  color: '#aaaaaa',
+  fontSize: '14px',
+  lineHeight: '24px',
+  margin: '0 0 40px',
+};
+```
+
+### Send the email
+
+Resend has native React support, so you can pass your component directly without using `render()`:
+
+```tsx lib/resend.ts
+import { Resend } from 'resend';
+import { WaitlistEmail } from '../emails/waitlist';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const data = await resend.emails.send({
+  from: 'onboarding@resend.dev',
+  to: 'user@example.com',
+  subject: 'Welcome to our waitlist',
+  react: WaitlistEmail({ name: 'John' }),
+});
+```
+
+### Next.js API route example
+
+```tsx pages/api/send.ts
+import type { NextApiRequest, NextApiResponse } from 'next';
+import { WaitlistEmail } from '../../emails/waitlist';
+import { resend } from '../../lib/resend';
+
+const send = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
+
+  switch (method) {
+    case 'POST': {
+      const data = await resend.emails.send({
+        from: 'onboarding@resend.dev',
+        to: req.body.email,
+        subject: 'Welcome to our waitlist',
+        react: WaitlistEmail({ name: req.body.name }),
+      });
+
+      res.status(200).send(data);
+      break;
+    }
+    default:
+      res.setHeader('Allow', ['POST']);
+      res.status(405).end(`Method ${method} Not Allowed`);
+  }
+};
+
+export default send;
+```
+
+## Why Resend?
+
+- **Native React support**: Pass React components directly without rendering
+- **TypeScript first**: Fully typed API with excellent IDE support
+- **Developer experience**: Clean API and comprehensive documentation
+- **Free tier**: Generous free tier for testing and small projects

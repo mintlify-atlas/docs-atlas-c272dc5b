@@ -1,0 +1,87 @@
+---
+title: 'Text'
+description: 'Paragraph component for blocks of text'
+---
+
+A block of text separated by blank spaces.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/text -E
+```
+
+```bash yarn
+yarn add @react-email/text -E
+```
+
+```bash pnpm
+pnpm add @react-email/text -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Text } from "@react-email/text";
+
+const Email = () => {
+  return <Text>Lorem ipsum</Text>;
+};
+```
+
+## Props
+
+The `Text` component accepts all standard HTML paragraph (`<p>`) element attributes.
+
+<ParamField path="children" type="ReactNode">
+  The text content to display
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the text. Default styles provide sensible margins and typography
+</ParamField>
+
+## Default Styles
+
+The `Text` component includes these default styles:
+- `fontSize: 14px` - Base font size
+- `lineHeight: 24px` - Line height for readability
+- `marginTop: 16px` - Top margin (can be overridden)
+- `marginBottom: 16px` - Bottom margin (can be overridden)
+
+## Styling Example
+
+```jsx
+import { Text } from "@react-email/text";
+
+const Email = () => {
+  return (
+    <>
+      <Text style={{ fontSize: "18px", fontWeight: "bold" }}>
+        Important Message
+      </Text>
+      <Text style={{ color: "#666", fontSize: "14px" }}>
+        This is the body text of your email with additional details.
+      </Text>
+    </>
+  );
+};
+```
+
+## TypeScript
+
+```tsx
+export type TextProps = Readonly<React.ComponentPropsWithoutRef<'p'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

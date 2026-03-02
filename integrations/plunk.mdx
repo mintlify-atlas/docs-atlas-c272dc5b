@@ -1,0 +1,143 @@
+---
+title: Plunk
+description: Send emails with React Email using Plunk
+---
+
+Plunk is a simple and affordable email API that makes it easy to send transactional emails from your application.
+
+## Installation
+
+<Steps>
+  <Step title="Install dependencies">
+    Install React Email components and the Plunk SDK:
+    
+    ```bash
+    npm install react-email @react-email/components @plunk/node
+    ```
+  </Step>
+  
+  <Step title="Set up your API key">
+    Get your API key from [Plunk](https://useplunk.com) and add it to your environment variables:
+    
+    ```bash
+    PLUNK_API_KEY=sk_...
+    ```
+  </Step>
+</Steps>
+
+## Usage
+
+### Create an email component
+
+```tsx emails/email.tsx
+import { Button, Html } from '@react-email/components';
+
+interface EmailProps {
+  url: string;
+}
+
+export const Email: React.FC<Readonly<EmailProps>> = ({ url }) => {
+  return (
+    <Html lang="en">
+      <Button href={url}>Click me</Button>
+    </Html>
+  );
+};
+```
+
+### Send the email
+
+```tsx index.tsx
+import plunkImport from '@plunk/node';
+import { render } from '@react-email/components';
+import { Email } from './email';
+
+const Plunk = (
+  plunkImport as unknown as {
+    default: typeof plunkImport;
+  }
+).default;
+
+// See https://github.com/useplunk/node/issues/2 for why Plunk.default
+const plunk = new Plunk(process.env.PLUNK_API_KEY || '');
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+await plunk.emails.send({
+  to: 'user@example.com',
+  subject: 'Hello world',
+  body: emailHtml,
+});
+```
+
+## Advanced features
+
+### From name and email
+
+```tsx
+await plunk.emails.send({
+  to: 'user@example.com',
+  subject: 'Hello world',
+  body: emailHtml,
+  name: 'Your Company',
+  from: 'hello@yourdomain.com',
+});
+```
+
+### Reply-to address
+
+```tsx
+await plunk.emails.send({
+  to: 'user@example.com',
+  subject: 'Hello world',
+  body: emailHtml,
+  replyTo: 'support@yourdomain.com',
+});
+```
+
+### Headers
+
+```tsx
+await plunk.emails.send({
+  to: 'user@example.com',
+  subject: 'Hello world',
+  body: emailHtml,
+  headers: {
+    'X-Custom-Header': 'value',
+  },
+});
+```
+
+### Subscribed status
+
+Automatically update the contact's subscribed status:
+
+```tsx
+await plunk.emails.send({
+  to: 'user@example.com',
+  subject: 'Hello world',
+  body: emailHtml,
+  subscribed: true,
+});
+```
+
+## Error handling
+
+```tsx
+try {
+  const response = await plunk.emails.send({
+    to: 'user@example.com',
+    subject: 'Hello world',
+    body: emailHtml,
+  });
+  console.log('Email sent:', response);
+} catch (error) {
+  console.error('Plunk error:', error);
+}
+```
+
+## Important notes
+
+- **Module compatibility**: Due to a module compatibility issue, you need to use the `.default` workaround shown above
+- **Domain verification**: Verify your sending domain in the Plunk dashboard
+- **Simple API**: Plunk has a straightforward API designed for ease of use

@@ -1,0 +1,67 @@
+---
+title: 'Head'
+description: 'Head component for metadata and style elements'
+---
+
+Contains head components such as style and meta elements. This component automatically includes essential meta tags for email rendering.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/head -E
+```
+
+```bash yarn
+yarn add @react-email/head -E
+```
+
+```bash pnpm
+pnpm add @react-email/head -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include children tags where needed.
+
+```jsx
+import { Head } from "@react-email/head";
+
+const Email = () => {
+  return (
+    <Head>
+      <title>My email title</title>
+    </Head>
+  );
+};
+```
+
+## Props
+
+The `Head` component accepts all standard HTML attributes for the `<head>` element.
+
+<ParamField path="children" type="ReactNode">
+  The content to place in the head element, such as `<title>`, `<style>`, `<meta>`, and `<Font>` components
+</ParamField>
+
+## Features
+
+The `Head` component automatically includes the following meta tags:
+
+- `<meta content="text/html; charset=UTF-8" httpEquiv="Content-Type" />` - Sets the character encoding
+- `<meta name="x-apple-disable-message-reformatting" />` - Prevents Apple Mail from reformatting your email
+
+## TypeScript
+
+```tsx
+export type HeadProps = Readonly<React.ComponentPropsWithoutRef<'head'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

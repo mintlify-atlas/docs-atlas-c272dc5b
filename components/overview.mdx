@@ -1,0 +1,133 @@
+---
+title: 'Components Overview'
+description: 'A comprehensive library of React components for building beautiful HTML emails'
+---
+
+React Email provides a collection of high-quality, unstyled components for building responsive emails that work across all major email clients.
+
+## Layout Components
+
+Build the structure of your email with these foundational components.
+
+<CardGroup cols={2}>
+  <Card title="Html" icon="code" href="/components/html">
+    Root HTML component to wrap your email
+  </Card>
+  <Card title="Head" icon="file-code" href="/components/head">
+    Contains head components like style and meta elements
+  </Card>
+  <Card title="Body" icon="rectangle-wide" href="/components/body">
+    Body wrapper for email content
+  </Card>
+  <Card title="Container" icon="box" href="/components/container">
+    Centers email content with max-width
+  </Card>
+  <Card title="Section" icon="table-layout" href="/components/section">
+    Section that can be formatted with rows and columns
+  </Card>
+  <Card title="Row" icon="horizontal-rule" href="/components/row">
+    Row component for layout
+  </Card>
+  <Card title="Column" icon="columns-3" href="/components/column">
+    Column component for vertical layout
+  </Card>
+</CardGroup>
+
+## Content Components
+
+Add rich content to your emails with these components.
+
+<CardGroup cols={2}>
+  <Card title="Text" icon="paragraph" href="/components/text">
+    Block of text separated by blank spaces
+  </Card>
+  <Card title="Heading" icon="heading" href="/components/heading">
+    Heading component with h1-h6 support
+  </Card>
+  <Card title="Button" icon="button" href="/components/button">
+    Link styled to look like a button
+  </Card>
+  <Card title="Link" icon="link" href="/components/link">
+    Hyperlink component
+  </Card>
+  <Card title="Img" icon="image" href="/components/img">
+    Display images in your email
+  </Card>
+  <Card title="Hr" icon="minus" href="/components/hr">
+    Horizontal rule divider
+  </Card>
+</CardGroup>
+
+## Code Components
+
+Display code snippets with syntax highlighting.
+
+<CardGroup cols={2}>
+  <Card title="CodeBlock" icon="code-simple" href="/components/code-block">
+    Display code blocks with syntax highlighting using Prism.js
+  </Card>
+  <Card title="CodeInline" icon="code" href="/components/code-inline">
+    Inline code element that works on all email clients
+  </Card>
+</CardGroup>
+
+## Utility Components
+
+Enhance your emails with fonts, markdown, and preview text.
+
+<CardGroup cols={2}>
+  <Card title="Preview" icon="eye" href="/components/preview">
+    Preview text displayed in email inbox
+  </Card>
+  <Card title="Font" icon="font" href="/components/font">
+    Set custom font family for your email
+  </Card>
+  <Card title="Markdown" icon="markdown" href="/components/markdown">
+    Convert Markdown to valid React Email code
+  </Card>
+</CardGroup>
+
+## Email Client Support
+
+All React Email components are tested and verified to work across the most popular email clients:
+
+- Gmail
+- Apple Mail
+- Outlook
+- Yahoo! Mail
+- HEY
+- Superhuman
+
+## Installation
+
+You can install individual components as needed:
+
+<CodeGroup>
+```bash npm
+npm install @react-email/[component-name] -E
+```
+
+```bash yarn
+yarn add @react-email/[component-name] -E
+```
+
+```bash pnpm
+pnpm add @react-email/[component-name] -E
+```
+</CodeGroup>
+
+Or install all components at once:
+
+<CodeGroup>
+```bash npm
+npm install @react-email/components -E
+```
+
+```bash yarn
+yarn add @react-email/components -E
+```
+
+```bash pnpm
+pnpm add @react-email/components -E
+```
+</CodeGroup>

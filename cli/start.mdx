@@ -1,0 +1,251 @@
+---
+title: email start
+description: Run the production build of the React Email preview app
+---
+
+The `start` command runs the production version of the preview app that was built using the `build` command.
+
+## Usage
+
+```bash
+email start
+```
+
+## Prerequisites
+
+Before running `email start`, you must first build the preview app:
+
+```bash
+email build
+```
+
+This creates a `.react-email` directory with the production-ready preview app.
+
+## How It Works
+
+When you run `email start`, the CLI:
+
+1. **Checks** that the `.react-email` directory exists
+2. **Runs** `next start` on the built application
+3. **Starts** a production server (default port: 3000)
+4. **Serves** your email templates with optimal performance
+
+## Example Workflow
+
+Complete workflow for production preview:
+
+```bash
+# Build the preview app
+email build
+
+# Start the production server
+email start
+```
+
+Terminal output:
+```
+✔ Ready on http://localhost:3000
+```
+
+## Default Port
+
+By default, the preview app starts on port 3000. The port is configured during the build process.
+
+To use a different port, you can set it in Next.js configuration before building, or use Next.js CLI directly:
+
+```bash
+cd .react-email
+npx next start -p 8080
+```
+
+## Production vs Development
+
+### Development Server (`email dev`)
+
+- Hot reloading enabled
+- Slower initial load
+- Real-time file watching
+- Development mode
+- Best for active development
+
+### Production Server (`email start`)
+
+- No hot reloading
+- Optimized performance
+- Pre-rendered static pages
+- Production mode
+- Best for demos and deployment
+
+## Use Cases
+
+### Local Preview
+
+Preview the production build locally before deploying:
+
+```bash
+email build
+email start
+```
+
+### Sharing with Team
+
+Share a production-quality preview with your team:
+
+1. Build the app: `email build`
+2. Start the server: `email start`
+3. Share the URL: `http://localhost:3000`
+
+For remote access, use a tunneling service:
+
+```bash
+email start &
+npx localtunnel --port 3000
+```
+
+### QA Testing
+
+Use the production build for quality assurance:
+
+```bash
+email build --dir ./src/emails
+email start
+```
+
+This ensures you're testing the exact output that will be deployed.
+
+## Stopping the Server
+
+To stop the server, press `Ctrl+C` in the terminal.
+
+The CLI handles graceful shutdown:
+
+- Ongoing requests complete
+- Server processes are cleaned up
+- Port is released
+
+## Deployment
+
+For actual deployment, you have several options:
+
+### Deploy to Vercel
+
+```bash
+cd .react-email
+vercel
+```
+
+### Deploy to Netlify
+
+```bash
+cd .react-email
+netlify deploy --prod
+```
+
+### Self-Hosted
+
+Run the production server on your own infrastructure:
+
+```bash
+# Using PM2
+cd .react-email
+pm2 start "npm start" --name react-email-preview
+
+# Using systemd
+[Unit]
+Description=React Email Preview
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+WorkingDirectory=/path/to/.react-email
+ExecStart=/usr/bin/npm start
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Docker
+
+Create a Docker image:
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY .react-email .
+WORKDIR /app/.react-email
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+Build and run:
+
+```bash
+docker build -t react-email-preview .
+docker run -p 3000:3000 react-email-preview
+```
+
+## Environment Variables
+
+The production server uses environment variables configured during build:
+
+- `REACT_EMAIL_INTERNAL_EMAILS_DIR_ABSOLUTE_PATH` - Absolute path to email templates
+- `REACT_EMAIL_INTERNAL_EMAILS_DIR_RELATIVE_PATH` - Relative path to email templates
+- `REACT_EMAIL_INTERNAL_PREVIEW_SERVER_LOCATION` - Location of preview server files
+- `REACT_EMAIL_INTERNAL_USER_PROJECT_LOCATION` - User's project root
+
+These are automatically set during `email build` and don't need manual configuration.
+
+## Troubleshooting
+
+### Directory Not Found
+
+If you see "Could not find .react-email":
+
+```bash
+# Solution: Build first
+email build
+email start
+```
+
+### Port Already in Use
+
+If port 3000 is occupied:
+
+```bash
+# Option 1: Use Next.js directly with custom port
+cd .react-email
+npx next start -p 8080
+
+# Option 2: Kill the process using port 3000
+lsof -ti:3000 | xargs kill -9
+email start
+```
+
+### Stale Build
+
+If changes aren't reflected:
+
+1. Stop the server (`Ctrl+C`)
+2. Rebuild: `email build`
+3. Restart: `email start`
+
+### Performance Issues
+
+For better performance:
+
+1. Ensure you're using the latest Node.js LTS version
+2. Check that the build completed successfully
+3. Monitor server resources (CPU, memory)
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Build Command" icon="hammer" href="/cli/build">
+    Learn about building the preview app
+  </Card>
+  <Card title="Export Templates" icon="file-export" href="/cli/export">
+    Export templates as static HTML files
+  </Card>
+</CardGroup>

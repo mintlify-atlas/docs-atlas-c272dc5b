@@ -1,0 +1,120 @@
+---
+title: CLI Overview
+description: Introduction to the React Email CLI for developing, building, and exporting email templates
+---
+
+The React Email CLI provides a complete toolkit for developing, building, and exporting email templates with live preview capabilities.
+
+## Installation
+
+Install the CLI as a development dependency in your project:
+
+```bash
+npm install react-email --save-dev
+```
+
+Or use it directly with npx:
+
+```bash
+npx react-email dev
+```
+
+## Quick Start
+
+Create an `emails` directory in your project and add your first template:
+
+```tsx emails/welcome.tsx
+import { Html, Button } from '@react-email/components';
+
+export default function Welcome() {
+  return (
+    <Html>
+      <Button href="https://example.com">Click me</Button>
+    </Html>
+  );
+}
+```
+
+Start the development server:
+
+```bash
+npx react-email dev
+```
+
+Open your browser to `http://localhost:3000` to see the live preview.
+
+## Available Commands
+
+The React Email CLI includes the following commands:
+
+<CardGroup cols={2}>
+  <Card title="dev" icon="code" href="/cli/dev">
+    Start the development server with live preview and hot reloading
+  </Card>
+  <Card title="build" icon="hammer" href="/cli/build">
+    Build the preview app for production deployment
+  </Card>
+  <Card title="export" icon="file-export" href="/cli/export">
+    Export email templates as static HTML files
+  </Card>
+  <Card title="start" icon="play" href="/cli/start">
+    Run the production build of the preview app
+  </Card>
+</CardGroup>
+
+## Directory Structure
+
+By default, React Email looks for templates in the `./emails` directory:
+
+```
+project/
+├── emails/
+│   ├── welcome.tsx
+│   ├── reset-password.tsx
+│   └── static/          # Optional: static assets
+│       └── logo.png
+├── package.json
+└── node_modules/
+```
+
+You can customize the directory path using the `--dir` flag on most commands.
+
+## Common Workflows
+
+### Development
+
+For active development with live preview:
+
+```bash
+npx react-email dev
+```
+
+### Exporting Templates
+
+To generate production-ready HTML files:
+
+```bash
+npx react-email export
+```
+
+This creates an `out/` directory with your rendered templates.
+
+### Production Preview
+
+To build and serve the preview app in production:
+
+```bash
+npx react-email build
+npx react-email start
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Development Server" icon="terminal" href="/cli/dev">
+    Learn about the dev command and its options
+  </Card>
+  <Card title="Exporting Templates" icon="download" href="/cli/export">
+    Export your templates as HTML for production use
+  </Card>
+</CardGroup>

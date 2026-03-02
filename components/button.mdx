@@ -1,0 +1,100 @@
+---
+title: 'Button'
+description: 'Link component styled to look like a button'
+---
+
+A link that is styled to look like a button, optimized for email clients.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/button -E
+```
+
+```bash yarn
+yarn add @react-email/button -E
+```
+
+```bash pnpm
+pnpm add @react-email/button -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Button } from "@react-email/button";
+
+const Email = () => {
+  return (
+    <Button href="https://example.com" style={{ color: "#61dafb" }}>
+      Click me
+    </Button>
+  );
+};
+```
+
+## Props
+
+The `Button` component accepts all standard HTML anchor (`<a>`) element attributes.
+
+<ParamField path="href" type="string">
+  Link to be triggered when the button is clicked
+</ParamField>
+
+<ParamField path="target" type="string" default="_blank">
+  Specify the target attribute for the button link
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content of the button
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the button. Padding is specially handled to work across all email clients, including Outlook
+</ParamField>
+
+## Styling Example
+
+```jsx
+import { Button } from "@react-email/button";
+
+const Email = () => {
+  return (
+    <Button
+      href="https://example.com"
+      style={{
+        backgroundColor: "#5469d4",
+        borderRadius: "4px",
+        color: "#fff",
+        fontSize: "16px",
+        fontWeight: "bold",
+        padding: "12px 24px",
+      }}
+    >
+      Get Started
+    </Button>
+  );
+};
+```
+
+## Implementation Details
+
+The `Button` component uses advanced techniques to ensure padding works correctly across all email clients, including Outlook which doesn't support padding on anchor elements. It uses conditional comments and special MSO properties to achieve consistent rendering.
+
+## TypeScript
+
+```tsx
+export type ButtonProps = Readonly<React.ComponentPropsWithoutRef<'a'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

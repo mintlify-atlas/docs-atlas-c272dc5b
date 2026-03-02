@@ -1,0 +1,149 @@
+---
+title: email dev
+description: Start the React Email development server with live preview and hot reloading
+---
+
+The `dev` command starts a local development server that provides a live preview of your email templates in the browser with automatic hot reloading.
+
+## Usage
+
+```bash
+email dev [options]
+```
+
+## Options
+
+<ParamField path="--dir" type="string" default="./emails">
+  Directory containing your email templates. The path is relative to your project root.
+  
+  ```bash
+  email dev --dir ./src/emails
+  ```
+</ParamField>
+
+<ParamField path="--port" type="string" default="3000">
+  Port number for the development server.
+  
+  ```bash
+  email dev --port 8080
+  ```
+</ParamField>
+
+## Examples
+
+### Basic Usage
+
+Start the dev server with default settings:
+
+```bash
+email dev
+```
+
+This starts the server on `http://localhost:3000` and watches the `./emails` directory.
+
+### Custom Directory
+
+Use a different directory for your email templates:
+
+```bash
+email dev --dir ./src/templates/emails
+```
+
+### Custom Port
+
+Run the server on a different port:
+
+```bash
+email dev --port 4000
+```
+
+Access the preview at `http://localhost:4000`.
+
+### Combined Options
+
+Combine multiple options:
+
+```bash
+email dev --dir ./src/emails --port 8080
+```
+
+## How It Works
+
+When you run `email dev`, the CLI:
+
+1. **Validates** that the specified email directory exists
+2. **Starts** a development server on the specified port
+3. **Watches** your email templates for changes
+4. **Enables** hot reloading to automatically refresh the preview when files change
+5. **Serves** static assets from the `static` subdirectory (if it exists)
+
+## Hot Reloading
+
+The dev server includes intelligent hot reloading that tracks dependencies:
+
+- Changes to email template files trigger automatic updates
+- Changes to imported components or utilities are detected
+- The browser preview refreshes instantly without losing state
+
+## Static Assets
+
+You can include static assets like images in your emails:
+
+```
+emails/
+├── welcome.tsx
+└── static/
+    └── logo.png
+```
+
+Reference them in your templates:
+
+```tsx
+<Img src="/static/logo.png" alt="Logo" />
+```
+
+The dev server automatically serves files from the `static` directory.
+
+## Package Manager Support
+
+The dev server works with npm, yarn, pnpm, and bun. It automatically detects your package manager.
+
+## Troubleshooting
+
+### Port Already in Use
+
+If port 3000 is already in use, specify a different port:
+
+```bash
+email dev --port 3001
+```
+
+### Directory Not Found
+
+If you see "Missing ./emails folder", either:
+
+1. Create the `emails` directory in your project root, or
+2. Use `--dir` to point to an existing directory:
+
+```bash
+email dev --dir ./path/to/your/emails
+```
+
+### Changes Not Reflecting
+
+If hot reloading isn't working:
+
+1. Check the terminal for any errors
+2. Try manually refreshing the browser
+3. Restart the dev server with `Ctrl+C` and run `email dev` again
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Export Templates" icon="file-export" href="/cli/export">
+    Learn how to export your templates as static HTML
+  </Card>
+  <Card title="Build for Production" icon="hammer" href="/cli/build">
+    Build the preview app for production deployment
+  </Card>
+</CardGroup>

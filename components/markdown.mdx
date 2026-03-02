@@ -1,0 +1,177 @@
+---
+title: 'Markdown'
+description: 'Convert Markdown to valid React Email template code'
+---
+
+Convert Markdown to valid React Email template code.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/markdown -E
+```
+
+```bash yarn
+yarn add @react-email/markdown -E
+```
+
+```bash pnpm
+pnpm add @react-email/markdown -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component around your email body content.
+
+```jsx
+import { Markdown } from "@react-email/markdown";
+import { Html } from "@react-email/html";
+
+const Email = () => {
+  return (
+    <Html lang="en" dir="ltr">
+      <Markdown
+        markdownCustomStyles={{
+          h1: { color: "red" },
+          h2: { color: "blue" },
+          codeInline: { background: "grey" },
+        }}
+        markdownContainerStyles={{
+          padding: "12px",
+          border: "solid 1px black",
+        }}
+      >{`# Hello, World!`}</Markdown>
+
+      {/* OR */}
+
+      <Markdown children={`# This is a ~~strikethrough~~`} />
+    </Html>
+  );
+};
+```
+
+## Props
+
+<ParamField path="children" type="string" required>
+  The markdown content that will be rendered in the email template
+</ParamField>
+
+<ParamField path="markdownCustomStyles" type="StylesType" default="{}">
+  Provide custom styles for the corresponding HTML elements (e.g., `p`, `h1`, `h2`, etc.)
+</ParamField>
+
+<ParamField path="markdownContainerStyles" type="React.CSSProperties" default="{}">
+  Provide custom styles for the containing `div` that wraps the markdown content
+</ParamField>
+
+## Supported Markdown Features
+
+The Markdown component supports all standard markdown syntax:
+
+- **Headings**: `# H1` through `###### H6`
+- **Bold**: `**bold**` or `__bold__`
+- **Italic**: `*italic*` or `_italic_`
+- **Strikethrough**: `~~strikethrough~~`
+- **Links**: `[text](url)`
+- **Images**: `![alt](url)`
+- **Code blocks**: ` ```code``` `
+- **Inline code**: `` `code` ``
+- **Lists**: Ordered (`1.`) and unordered (`-` or `*`)
+- **Blockquotes**: `> quote`
+- **Horizontal rules**: `---` or `***`
+- **Tables**: Markdown table syntax
+
+## Styling Examples
+
+### Custom Heading Colors
+
+```jsx
+import { Markdown } from "@react-email/markdown";
+
+const Email = () => {
+  return (
+    <Markdown
+      markdownCustomStyles={{
+        h1: { color: "#1a1a1a", fontSize: "32px" },
+        h2: { color: "#333333", fontSize: "24px" },
+        h3: { color: "#666666", fontSize: "18px" },
+      }}
+    >
+      {`
+# Main Heading
+## Subheading
+### Section Title
+      `}
+    </Markdown>
+  );
+};
+```
+
+### Custom Link and Code Styles
+
+```jsx
+import { Markdown } from "@react-email/markdown";
+
+const Email = () => {
+  return (
+    <Markdown
+      markdownCustomStyles={{
+        link: { color: "#0066cc", textDecoration: "underline" },
+        codeInline: { 
+          backgroundColor: "#f4f4f4",
+          padding: "2px 6px",
+          borderRadius: "3px",
+          fontFamily: "monospace"
+        },
+        codeBlock: {
+          backgroundColor: "#2d2d2d",
+          color: "#f8f8f2",
+          padding: "16px",
+          borderRadius: "4px"
+        }
+      }}
+    >
+      {`Check out [our docs](https://example.com) for more info on \`inline code\`.`}
+    </Markdown>
+  );
+};
+```
+
+## Available Style Properties
+
+You can customize styles for the following elements:
+
+- `h1`, `h2`, `h3`, `h4`, `h5`, `h6` - Headings
+- `p` - Paragraphs
+- `link` - Links
+- `bold` - Bold text
+- `italic` - Italic text
+- `strikethrough` - Strikethrough text
+- `codeInline` - Inline code
+- `codeBlock` - Code blocks
+- `blockQuote` - Blockquotes
+- `ul`, `ol` - Lists
+- `li` - List items
+- `table`, `thead`, `tbody`, `tr`, `td` - Table elements
+- `hr` - Horizontal rules
+- `image` - Images
+
+## TypeScript
+
+```tsx
+export type MarkdownProps = Readonly<{
+  children: string;
+  markdownCustomStyles?: StylesType;
+  markdownContainerStyles?: React.CSSProperties;
+}>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

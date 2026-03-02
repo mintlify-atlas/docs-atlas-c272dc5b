@@ -1,0 +1,75 @@
+---
+title: 'Html'
+description: 'Root HTML component to wrap emails'
+---
+
+A React html component to wrap emails. This is the root component that wraps all other email content.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/html -E
+```
+
+```bash yarn
+yarn add @react-email/html -E
+```
+
+```bash pnpm
+pnpm add @react-email/html -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Button } from "@react-email/button";
+import { Html } from "@react-email/html";
+
+const Email = () => {
+  return (
+    <Html lang="en">
+      <Button href="https://example.com" style={{ color: "#61dafb" }}>
+        Click me
+      </Button>
+    </Html>
+  );
+};
+```
+
+## Props
+
+The `Html` component accepts all standard HTML attributes for the `<html>` element, plus:
+
+<ParamField path="lang" type="string" default="en">
+  The language of the email content
+</ParamField>
+
+<ParamField path="dir" type="string" default="ltr">
+  The text direction of the email content. Use `"rtl"` for right-to-left languages
+</ParamField>
+
+<ParamField path="children" type="ReactNode">
+  The content of your email
+</ParamField>
+
+<ParamField path="style" type="CSSProperties">
+  Inline styles for the html element
+</ParamField>
+
+## TypeScript
+
+```tsx
+export type HtmlProps = Readonly<React.ComponentPropsWithoutRef<'html'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

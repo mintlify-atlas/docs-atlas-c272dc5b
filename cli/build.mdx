@@ -1,0 +1,212 @@
+---
+title: email build
+description: Build the React Email preview app for production deployment
+---
+
+The `build` command creates a production-ready version of the preview app in a `.react-email` directory and builds it using Next.js.
+
+## Usage
+
+```bash
+email build [options]
+```
+
+## Options
+
+<ParamField path="--dir" type="string" default="./emails">
+  Directory containing your email templates. The path is relative to your project root.
+  
+  ```bash
+  email build --dir ./src/emails
+  ```
+</ParamField>
+
+<ParamField path="--packageManager" type="string" default="npm">
+  Package manager to use for installing dependencies. Supports `npm`, `yarn`, `pnpm`, and `bun`.
+  
+  ```bash
+  email build --packageManager pnpm
+  ```
+</ParamField>
+
+## Examples
+
+### Basic Usage
+
+Build with default settings:
+
+```bash
+email build
+```
+
+This builds the preview app using npm and templates from `./emails`.
+
+### Using Yarn
+
+Build with Yarn as the package manager:
+
+```bash
+email build --packageManager yarn
+```
+
+### Using pnpm
+
+Build with pnpm:
+
+```bash
+email build --packageManager pnpm
+```
+
+### Custom Email Directory
+
+Build from a custom directory:
+
+```bash
+email build --dir ./src/templates/emails
+```
+
+### Combined Options
+
+```bash
+email build --dir ./src/emails --packageManager yarn
+```
+
+## How It Works
+
+When you run `email build`, the CLI performs these steps:
+
+1. **Validates** that the email directory exists
+2. **Deletes** any existing `.react-email` directory
+3. **Copies** the preview app from the CLI package to `.react-email`
+4. **Copies** static assets from `emails/static` to `.react-email/public/static`
+5. **Configures** Next.js environment variables for your project
+6. **Prepares** static site generation (SSG) for all email templates
+7. **Updates** package.json scripts for production
+8. **Installs** dependencies using your specified package manager
+9. **Runs** `next build` to create the production bundle
+
+## Build Output
+
+After building, your project structure will include:
+
+```
+project/
+├── .react-email/          # Built preview app
+│   ├── .next/            # Next.js build output
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── next.config.mjs
+├── emails/
+├── package.json
+└── node_modules/
+```
+
+The `.react-email` directory contains a complete Next.js application ready for deployment or local preview.
+
+## Static Site Generation
+
+The build process automatically configures Next.js to pre-render all email templates at build time:
+
+- Each template is generated as a static HTML page
+- No server-side rendering required at runtime
+- Faster page loads in the preview app
+- Can be deployed to any static hosting service
+
+## Production Configuration
+
+The build command automatically:
+
+- Sets `NODE_OPTIONS` for experimental VM modules
+- Configures TypeScript to ignore build errors
+- Sets a 600-second timeout for static page generation
+- Marks `esbuild` as a server-external package
+- Removes development-only scripts
+
+## Running the Built App
+
+After building, start the production server:
+
+```bash
+email start
+```
+
+This runs the built preview app from `.react-email`.
+
+## Deployment
+
+You can deploy the `.react-email` directory to any Node.js hosting platform:
+
+### Vercel
+
+```bash
+cd .react-email
+vercel
+```
+
+### Netlify
+
+```bash
+cd .react-email
+netlify deploy
+```
+
+### Docker
+
+Create a Dockerfile in `.react-email`:
+
+```dockerfile
+FROM node:18-alpine
+WORKDIR /app
+COPY . .
+RUN npm install
+EXPOSE 3000
+CMD ["npm", "start"]
+```
+
+## Package Manager Detection
+
+If you don't specify `--packageManager`, the CLI uses npm by default. To use a different package manager:
+
+```bash
+email build --packageManager yarn
+email build --packageManager pnpm
+email build --packageManager bun
+```
+
+## Troubleshooting
+
+### Build Failures
+
+If the build fails:
+
+1. Check that all dependencies are installed in your main project
+2. Ensure your email templates are valid React components
+3. Review the build logs for specific errors
+
+### Out of Memory
+
+For large projects with many templates, you may need to increase Node's memory:
+
+```bash
+NODE_OPTIONS="--max-old-space-size=4096" email build
+```
+
+### Missing Static Files
+
+If static assets aren't appearing:
+
+1. Ensure they're in `emails/static/` directory
+2. Check that the build completed successfully
+3. Verify files were copied to `.react-email/public/static/`
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Start Production Server" icon="play" href="/cli/start">
+    Learn how to run the built preview app
+  </Card>
+  <Card title="Export Templates" icon="file-export" href="/cli/export">
+    Export templates as static HTML files
+  </Card>
+</CardGroup>

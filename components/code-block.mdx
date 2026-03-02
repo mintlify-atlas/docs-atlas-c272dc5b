@@ -1,0 +1,139 @@
+---
+title: 'CodeBlock'
+description: 'Display code blocks with syntax highlighting using Prism.js'
+---
+
+Display code with a selected theme and regex highlighting using Prism.js.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/code-block -E
+```
+
+```bash yarn
+yarn add @react-email/code-block -E
+```
+
+```bash pnpm
+pnpm add @react-email/code-block -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template.
+
+```jsx
+import { CodeBlock, dracula } from "@react-email/code-block";
+
+const Email = () => {
+  const code = `export default async (req, res) => {
+  try {
+    const html = await renderAsync(
+      EmailTemplate({ firstName: 'John' })
+    );
+    return NextResponse.json({ html });
+  } catch (error) {
+    return NextResponse.json({ error });
+  }
+}`;
+
+  return (
+    <CodeBlock
+      code={code}
+      lineNumbers
+      theme={dracula}
+      language="javascript"
+    />
+  );
+};
+```
+
+## Props
+
+<ParamField path="code" type="string" required>
+  The code string to display
+</ParamField>
+
+<ParamField path="language" type="PrismLanguage" required>
+  The programming language for syntax highlighting (e.g., `"javascript"`, `"typescript"`, `"python"`, `"html"`, etc.)
+</ParamField>
+
+<ParamField path="theme" type="Theme" required>
+  The theme object for styling. Import built-in themes from `@react-email/code-block` like `dracula`, `github`, `monokai`, etc.
+</ParamField>
+
+<ParamField path="lineNumbers" type="boolean" default="false">
+  Whether to display line numbers beside each code line
+</ParamField>
+
+<ParamField path="fontFamily" type="string">
+  Override the font family for the code block. Useful when using a global font with the `<Font>` component
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Additional inline styles for the pre element
+</ParamField>
+
+## Theming
+
+Themes for this component are a set of styles for each kind of token that results from Prism.js's tokenization. An example theme structure:
+
+```json
+{
+  "base": {
+    "color": "#f8f8f2",
+    "background": "#282a36",
+    "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+    "fontSize": "14px",
+    "lineHeight": "1.5",
+    "padding": "1em",
+    "borderRadius": "0.3em"
+  },
+  "comment": {
+    "color": "#6272a4"
+  },
+  "string": {
+    "color": "#f1fa8c"
+  },
+  "keyword": {
+    "color": "#ff79c6"
+  }
+  // ... more token styles
+}
+```
+
+### Built-in Themes
+
+The package includes several pre-built themes that you can import:
+
+- `dracula`
+- `github`
+- `monokai`
+- And more...
+
+```jsx
+import { CodeBlock, dracula, github, monokai } from "@react-email/code-block";
+```
+
+## TypeScript
+
+```tsx
+export interface CodeBlockProps extends React.ComponentPropsWithoutRef<'pre'> {
+  lineNumbers?: boolean;
+  fontFamily?: string;
+  theme: Theme;
+  language: PrismLanguage;
+  code: string;
+}
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

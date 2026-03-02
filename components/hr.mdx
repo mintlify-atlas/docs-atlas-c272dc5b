@@ -1,0 +1,101 @@
+---
+title: 'Hr'
+description: 'Horizontal rule divider component'
+---
+
+Display a divider that separates content areas in your email.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/hr -E
+```
+
+```bash yarn
+yarn add @react-email/hr -E
+```
+
+```bash pnpm
+pnpm add @react-email/hr -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { Hr } from "@react-email/hr";
+
+const Email = () => {
+  return <Hr />;
+};
+```
+
+## Props
+
+The `Hr` component accepts all standard HTML `<hr>` element attributes.
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the horizontal rule. Default styles provide a subtle divider
+</ParamField>
+
+## Default Styles
+
+The `Hr` component includes these default styles:
+- `width: 100%` - Full width divider
+- `border: none` - No default border
+- `borderTop: 1px solid #eaeaea` - Light gray top border
+
+## Styling Examples
+
+### Custom Color and Thickness
+
+```jsx
+import { Hr } from "@react-email/hr";
+
+const Email = () => {
+  return (
+    <Hr style={{ borderTop: "2px solid #333" }} />
+  );
+};
+```
+
+### With Margin Spacing
+
+```jsx
+import { Hr } from "@react-email/hr";
+
+const Email = () => {
+  return (
+    <Hr style={{ margin: "24px 0", borderTop: "1px solid #ccc" }} />
+  );
+};
+```
+
+### Dashed Style
+
+```jsx
+import { Hr } from "@react-email/hr";
+
+const Email = () => {
+  return (
+    <Hr style={{ borderTop: "1px dashed #999" }} />
+  );
+};
+```
+
+## TypeScript
+
+```tsx
+export type HrProps = Readonly<React.ComponentPropsWithoutRef<'hr'>>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

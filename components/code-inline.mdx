@@ -1,0 +1,99 @@
+---
+title: 'CodeInline'
+description: 'Inline code element that works on all email clients'
+---
+
+Display a predictable inline code HTML element that works on all email clients.
+
+## Installation
+
+<CodeGroup>
+```bash npm
+npm install @react-email/code-inline -E
+```
+
+```bash yarn
+yarn add @react-email/code-inline -E
+```
+
+```bash pnpm
+pnpm add @react-email/code-inline -E
+```
+</CodeGroup>
+
+## Usage
+
+Add the component to your email template. Include styles where needed.
+
+```jsx
+import { CodeInline } from "@react-email/code-inline";
+
+const Email = () => {
+  return <CodeInline>@react-email/code-inline</CodeInline>;
+};
+```
+
+## Props
+
+The `CodeInline` component accepts all standard HTML `<code>` and `<span>` element attributes.
+
+<ParamField path="children" type="ReactNode">
+  The code text to display inline
+</ParamField>
+
+<ParamField path="style" type="React.CSSProperties">
+  Inline styles for the code element
+</ParamField>
+
+<ParamField path="className" type="string">
+  CSS class name for the code element
+</ParamField>
+
+## Styling Example
+
+```jsx
+import { CodeInline } from "@react-email/code-inline";
+import { Text } from "@react-email/text";
+
+const Email = () => {
+  return (
+    <Text>
+      To install the package, run{" "}
+      <CodeInline style={{ 
+        backgroundColor: "#f4f4f4",
+        padding: "2px 6px",
+        borderRadius: "3px",
+        fontFamily: "monospace"
+      }}>
+        npm install react-email
+      </CodeInline>
+      {" "}in your terminal.
+    </Text>
+  );
+};
+```
+
+## Implementation Details
+
+This component includes special handling for the Orange.fr email client, which requires specific workarounds to display inline code correctly. It renders both a `<code>` and `<span>` element with conditional CSS to ensure compatibility.
+
+<Warning>
+If you are sending emails to users with the Orange.fr email client, this component will only work when you have a head containing meta tags.
+</Warning>
+
+## TypeScript
+
+```tsx
+type RootProps = React.ComponentPropsWithoutRef<'code'> &
+  React.ComponentPropsWithoutRef<'span'>;
+
+export type CodeInlineProps = Readonly<RootProps>;
+```
+
+## Email Client Support
+
+This component was tested using the most popular email clients.
+
+| Gmail | Apple Mail | Outlook | Yahoo! Mail | HEY | Superhuman |
+| ----- | ---------- | ------- | ----------- | --- | ---------- |
+| ✔     | ✔          | ✔       | ✔           | ✔   | ✔          |

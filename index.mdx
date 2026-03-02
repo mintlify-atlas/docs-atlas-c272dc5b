@@ -1,97 +1,125 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: React Email
+description: Build and send emails using React components
 ---
 
-## Setting up
+<img
+  className="block dark:hidden"
+  src="https://react.email/static/covers/react-email.png"
+  alt="React Email"
+/>
+<img
+  className="hidden dark:block"
+  src="https://react.email/static/covers/react-email.png"
+  alt="React Email"
+/>
 
-Get your documentation site up and running in minutes.
+## Build emails with React
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+React Email is a collection of high-quality, unstyled components for creating beautiful emails using React and TypeScript. Stop coding emails like it's 2010.
 
-## Make it yours
-
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
+<CardGroup cols={2}>
   <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
+    title="Get Started"
+    icon="rocket"
+    href="/quickstart"
   >
-    Edit your docs locally and preview them in real time.
+    Build your first email in minutes
   </Card>
   <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
+    title="Components"
+    icon="puzzle-piece"
+    href="/components/overview"
   >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
+    Explore 20+ email components
   </Card>
   <Card
-    title="API documentation"
+    title="CLI Tools"
     icon="terminal"
-    href="/api-reference/introduction"
+    href="/cli/overview"
   >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
+    Live preview and development server
   </Card>
   <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
+    title="Integrations"
+    icon="plug"
+    href="/integrations/overview"
   >
-    Add sample code to demonstrate how to use your product.
+    Send with any email provider
   </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+</CardGroup>
 
-## Need inspiration?
+## Why React Email?
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+<CardGroup cols={3}>
+  <Card title="Modern DX" icon="code">
+    Write emails using React and TypeScript
+  </Card>
+  <Card title="Type Safe" icon="shield">
+    Full TypeScript support included
+  </Card>
+  <Card title="Dark Mode" icon="moon">
+    Built-in dark mode support
+  </Card>
+  <Card title="Responsive" icon="mobile">
+    Mobile-friendly by default
+  </Card>
+  <Card title="Email Clients" icon="envelope">
+    Tested on all major clients
+  </Card>
+  <Card title="Live Preview" icon="eye">
+    See changes instantly
+  </Card>
+</CardGroup>
+
+## Quick example
+
+```jsx
+import { Button, Html, Text } from '@react-email/components';
+
+export default function WelcomeEmail() {
+  return (
+    <Html>
+      <Text>Welcome to our platform!</Text>
+      <Button href="https://example.com">Get started</Button>
+    </Html>
+  );
+}
+```
+
+<Note>
+  All components work across Gmail, Outlook, Apple Mail, Yahoo, and more.
+</Note>
+
+## Next steps
+
+<Steps>
+  <Step title="Install">
+    Get React Email components installed
+    
+    ```bash
+    npm install @react-email/components
+    ```
+  </Step>
+  
+  <Step title="Build">
+    Create your email template with React
+    
+    ```jsx
+    import { Html, Button } from '@react-email/components';
+    
+    export default function Email() {
+      return <Html><Button href="#">Click me</Button></Html>;
+    }
+    ```
+  </Step>
+  
+  <Step title="Send">
+    Render and send with any provider
+    
+    ```jsx
+    import { render } from '@react-email/components';
+    const html = await render(<Email />);
+    ```
+  </Step>
+</Steps>

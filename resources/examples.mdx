@@ -1,0 +1,133 @@
+---
+title: Examples
+description: Learn how to use React Email with different email service providers through practical examples.
+---
+
+React Email can be integrated with any email service provider. Below are working examples demonstrating how to send emails built with React Email using popular email services.
+
+## Email Service Providers
+
+All examples show how to convert React Email components into HTML and send them using various email service providers.
+
+### Resend
+
+Send emails using Resend, a modern email API built for developers.
+
+- **Example**: [resend](https://github.com/resend/react-email/tree/main/examples/resend)
+- **Package**: `resend`
+- **Framework**: Next.js
+
+```tsx
+import { resend } from './lib/resend';
+import { WaitlistEmail } from './emails/waitlist';
+
+const data = await resend.emails.send({
+  from: 'you@example.com',
+  to: 'user@example.com',
+  subject: 'Waitlist',
+  react: WaitlistEmail({ name: 'Bu' }),
+});
+```
+
+### Nodemailer
+
+Send emails using Nodemailer, a popular Node.js module for sending emails.
+
+- **Example**: [nodemailer](https://github.com/resend/react-email/tree/main/examples/nodemailer)
+- **Package**: `nodemailer`
+- **Type**: Node.js script
+
+```tsx
+import { render } from '@react-email/components';
+import nodemailer from 'nodemailer';
+import { Email } from './email';
+
+const transporter = nodemailer.createTransport({
+  host: 'smtp.forwardemail.net',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'my_user',
+    pass: 'my_password',
+  },
+});
+
+const emailHtml = await render(<Email url="https://example.com" />);
+
+await transporter.sendMail({
+  from: 'you@example.com',
+  to: 'user@gmail.com',
+  subject: 'hello world',
+  html: emailHtml,
+});
+```
+
+### SendGrid
+
+Send emails using SendGrid's email delivery platform.
+
+- **Example**: [sendgrid](https://github.com/resend/react-email/tree/main/examples/sendgrid)
+- **Package**: `@sendgrid/mail`
+- **Type**: Node.js script
+
+### Postmark
+
+Send emails using Postmark's transactional email service.
+
+- **Example**: [postmark](https://github.com/resend/react-email/tree/main/examples/postmark)
+- **Package**: `postmark`
+- **Type**: Node.js script
+
+### AWS SES
+
+Send emails using Amazon Simple Email Service (SES).
+
+- **Example**: [aws-ses](https://github.com/resend/react-email/tree/main/examples/aws-ses)
+- **Package**: `@aws-sdk/client-ses`
+- **Type**: Node.js script
+
+### Plunk
+
+Send emails using Plunk's email platform.
+
+- **Example**: [plunk](https://github.com/resend/react-email/tree/main/examples/plunk)
+- **Package**: `@plunk/node`
+- **Type**: Node.js script
+
+### MailerSend
+
+Send emails using MailerSend's transactional email service.
+
+- **Example**: [mailersend](https://github.com/resend/react-email/tree/main/examples/mailersend)
+- **Package**: `mailersend`
+- **Type**: Node.js script
+
+### Scaleway
+
+Send emails using Scaleway's Transactional Email service.
+
+- **Next.js Example**: [scaleway/next](https://github.com/resend/react-email/tree/main/examples/scaleway/next)
+- **Node.js Example**: [scaleway/node](https://github.com/resend/react-email/tree/main/examples/scaleway/node)
+- **Package**: `@scaleway/sdk`
+- **Frameworks**: Next.js and Node.js
+
+## How Examples Work
+
+All examples follow a similar pattern:
+
+1. **Create email components** using React Email components
+2. **Render to HTML** using the `render` function from `@react-email/components`
+3. **Send via provider** using the provider's SDK or API
+
+Each example is a complete, working implementation that you can use as a starting point for your own email infrastructure.
+
+## Running Examples Locally
+
+To run any example locally:
+
+1. Navigate to the example directory
+2. Install dependencies with your package manager
+3. Configure your API keys and credentials
+4. Run the development server or build script
+
+Refer to each example's source code for specific setup instructions.

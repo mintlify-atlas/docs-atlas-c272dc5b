@@ -1,80 +1,436 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quickstart
+description: Build your first email with React Email in minutes
 ---
 
-## Get started in three steps
+## Overview
 
-Get your documentation site running locally and make your first customization.
+This guide will walk you through creating a complete email template using React Email, rendering it to HTML, and sending it with an email provider.
 
-### Step 1: Set up your local environment
-
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
+<Steps>
+  <Step title="Install React Email">
+    First, install the components package:
     
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
+    <CodeGroup>
     
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
-
-### Step 2: Deploy your changes
-
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
+    ```bash npm
+    npm install @react-email/components
+    ```
     
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+    ```bash yarn
+    yarn add @react-email/components
+    ```
+    
+    ```bash pnpm
+    pnpm add @react-email/components
+    ```
+    
+    </CodeGroup>
+  </Step>
+  
+  <Step title="Create Your First Email">
+    Create a new file for your email template:
+    
+    ```tsx emails/welcome.tsx
+    import {
+      Body,
+      Container,
+      Head,
+      Heading,
+      Html,
+      Preview,
+      Text,
+    } from '@react-email/components';
+    
+    interface WelcomeEmailProps {
+      name: string;
+    }
+    
+    export const WelcomeEmail: React.FC<Readonly<WelcomeEmailProps>> = ({
+      name,
+    }) => (
+      <Html>
+        <Head />
+        <Body style={main}>
+          <Preview>
+            Welcome to our platform! We're excited to have you.
+          </Preview>
+          <Container style={container}>
+            <Heading style={h1}>Welcome aboard!</Heading>
+            <Text style={text}>
+              Hi {name}, thank you for joining our platform. We're excited to
+              have you on board and can't wait to see what you'll create.
+            </Text>
+          </Container>
+        </Body>
+      </Html>
+    );
+    
+    export default WelcomeEmail;
+    
+    const main = {
+      backgroundColor: '#ffffff',
+      fontFamily:
+        '-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif',
+    };
+    
+    const container = {
+      margin: '0 auto',
+      padding: '20px 0 48px',
+      maxWidth: '560px',
+    };
+    
+    const h1 = {
+      color: '#333',
+      fontSize: '24px',
+      fontWeight: '600',
+      lineHeight: '40px',
+      margin: '0 0 20px',
+    };
+    
+    const text = {
+      color: '#666',
+      fontSize: '14px',
+      lineHeight: '24px',
+      margin: '0 0 40px',
+    };
+    ```
+    
+    <Info>
+      The `Preview` component sets the preview text that appears in email clients before opening the email.
+    </Info>
+  </Step>
+  
+  <Step title="Preview Your Email">
+    Start the development server to see your email in the browser:
+    
+    ```bash
+    npx react-email dev
+    ```
+    
+    Open [http://localhost:3000](http://localhost:3000) to see your email with live reload.
+    
+    <Tip>
+      The dev server watches for file changes and automatically reloads, making it easy to iterate on your design.
+    </Tip>
+  </Step>
+  
+  <Step title="Render to HTML">
+    To send your email, you need to convert it to HTML using the `render` function:
+    
+    ```tsx
+    import { render } from '@react-email/components';
+    import { WelcomeEmail } from './emails/welcome';
+    
+    const emailHtml = await render(<WelcomeEmail name="Alice" />);
+    ```
+    
+    <Note>
+      The `render` function returns a Promise that resolves to an HTML string optimized for email clients.
+    </Note>
+  </Step>
+  
+  <Step title="Send Your Email">
+    Now you can send the HTML with any email provider. Here's an example with Nodemailer:
+    
+    ```tsx
+    import { render } from '@react-email/components';
+    import nodemailer from 'nodemailer';
+    import { WelcomeEmail } from './emails/welcome';
+    
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.forwardemail.net',
+      port: 465,
+      secure: true,
+      auth: {
+        user: 'my_user',
+        pass: 'my_password',
+      },
+    });
+    
+    const emailHtml = await render(<WelcomeEmail name="Alice" />);
+    
+    const options = {
+      from: 'you@example.com',
+      to: 'user@gmail.com',
+      subject: 'Welcome to our platform!',
+      html: emailHtml,
+    };
+    
+    await transporter.sendMail(options);
+    ```
+  </Step>
+</Steps>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+## Add a Button
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+Let's enhance the email by adding a call-to-action button:
 
-### Step 3: Go live
+```tsx emails/welcome.tsx
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Heading,
+  Html,
+  Preview,
+  Text,
+} from '@react-email/components';
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+interface WelcomeEmailProps {
+  name: string;
+  loginUrl: string;
+}
 
-## Next steps
+export const WelcomeEmail: React.FC<Readonly<WelcomeEmailProps>> = ({
+  name,
+  loginUrl,
+}) => (
+  <Html>
+    <Head />
+    <Body style={main}>
+      <Preview>
+        Welcome to our platform! We're excited to have you.
+      </Preview>
+      <Container style={container}>
+        <Heading style={h1}>Welcome aboard!</Heading>
+        <Text style={text}>
+          Hi {name}, thank you for joining our platform. We're excited to
+          have you on board and can't wait to see what you'll create.
+        </Text>
+        <Button style={button} href={loginUrl}>
+          Get Started
+        </Button>
+      </Container>
+    </Body>
+  </Html>
+);
 
-Now that you have your docs running, explore these key features:
+export default WelcomeEmail;
+
+const main = {
+  backgroundColor: '#ffffff',
+  fontFamily:
+    '-apple-system,BlinkMacSystemFont,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue",sans-serif',
+};
+
+const container = {
+  margin: '0 auto',
+  padding: '20px 0 48px',
+  maxWidth: '560px',
+};
+
+const h1 = {
+  color: '#333',
+  fontSize: '24px',
+  fontWeight: '600',
+  lineHeight: '40px',
+  margin: '0 0 20px',
+};
+
+const text = {
+  color: '#666',
+  fontSize: '14px',
+  lineHeight: '24px',
+  margin: '0 0 10px',
+};
+
+const button = {
+  backgroundColor: '#5469d4',
+  borderRadius: '4px',
+  color: '#fff',
+  fontSize: '16px',
+  fontWeight: '600',
+  textDecoration: 'none',
+  textAlign: 'center' as const,
+  display: 'block',
+  padding: '12px 20px',
+};
+```
+
+<Check>
+  The button will render as a styled link that works reliably across all email clients.
+</Check>
+
+## Styling Best Practices
+
+React Email components accept inline styles for maximum email client compatibility:
 
 <CardGroup cols={2}>
-
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
-
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
-
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
-
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
-
+  <Card title="Use Inline Styles" icon="paintbrush">
+    Email clients have limited CSS support. Always use inline styles with the `style` prop.
+  </Card>
+  
+  <Card title="Define Style Objects" icon="code">
+    Create reusable style objects for consistency and maintainability.
+  </Card>
+  
+  <Card title="Avoid CSS Classes" icon="ban">
+    Most email clients don't support CSS classes. Stick to inline styles.
+  </Card>
+  
+  <Card title="Use Tailwind (Optional)" icon="wind">
+    The Tailwind component can convert utility classes to inline styles.
+  </Card>
 </CardGroup>
 
-<Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
-</Note>
+## Common Email Patterns
+
+<AccordionGroup>
+  <Accordion title="Transactional Email" icon="receipt">
+    ```tsx
+    import { Html, Button, Text, Container } from '@react-email/components';
+    
+    export default function OrderConfirmation({ orderNumber, trackingUrl }) {
+      return (
+        <Html>
+          <Container>
+            <Text>Your order #{orderNumber} has shipped!</Text>
+            <Button href={trackingUrl}>Track Package</Button>
+          </Container>
+        </Html>
+      );
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Newsletter" icon="newspaper">
+    ```tsx
+    import { Html, Section, Heading, Text, Link } from '@react-email/components';
+    
+    export default function Newsletter({ articles }) {
+      return (
+        <Html>
+          {articles.map((article) => (
+            <Section key={article.id}>
+              <Heading>{article.title}</Heading>
+              <Text>{article.excerpt}</Text>
+              <Link href={article.url}>Read more</Link>
+            </Section>
+          ))}
+        </Html>
+      );
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Welcome Email" icon="hand-wave">
+    ```tsx
+    import { Html, Body, Container, Heading, Text, Button } from '@react-email/components';
+    
+    export default function Welcome({ name, verifyUrl }) {
+      return (
+        <Html>
+          <Body>
+            <Container>
+              <Heading>Welcome {name}!</Heading>
+              <Text>Thanks for signing up. Please verify your email.</Text>
+              <Button href={verifyUrl}>Verify Email</Button>
+            </Container>
+          </Body>
+        </Html>
+      );
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Working with Images
+
+Add images using the `Img` component:
+
+```tsx
+import { Img, Html, Container } from '@react-email/components';
+
+export default function Email() {
+  return (
+    <Html>
+      <Container>
+        <Img
+          src="https://example.com/logo.png"
+          width="150"
+          height="50"
+          alt="Company Logo"
+        />
+      </Container>
+    </Html>
+  );
+}
+```
+
+<Warning>
+  Always use absolute URLs for images. Email clients don't support relative paths.
+</Warning>
+
+## Email Provider Integration
+
+React Email works with all major email providers:
+
+<CardGroup cols={2}>
+  <Card title="Resend" icon="paper-plane" href="/integrations/resend">
+    Modern email API with great React Email support
+  </Card>
+  
+  <Card title="Nodemailer" icon="envelope" href="/integrations/nodemailer">
+    Popular Node.js email sending library
+  </Card>
+  
+  <Card title="SendGrid" icon="grid" href="/integrations/sendgrid">
+    Scalable email delivery platform
+  </Card>
+  
+  <Card title="AWS SES" icon="aws" href="/integrations/aws-ses">
+    Amazon's email sending service
+  </Card>
+</CardGroup>
+
+## Export to Static HTML
+
+You can export all your emails to static HTML files:
+
+```bash
+npx react-email export
+```
+
+This creates an `out` directory with HTML files for each email template.
+
+<Tip>
+  Static exports are useful for version control, testing, or using with email systems that don't support dynamic rendering.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Explore Components"
+    icon="puzzle-piece"
+    href="/components/overview"
+  >
+    Learn about all available React Email components
+  </Card>
+  
+  <Card
+    title="Render API"
+    icon="code"
+    href="/utilities/render"
+  >
+    Advanced rendering options and configurations
+  </Card>
+  
+  <Card
+    title="Integrations"
+    icon="plug"
+    href="/integrations/overview"
+  >
+    Set up React Email with your email provider
+  </Card>
+  
+  <Card
+    title="Examples"
+    icon="book-open"
+    href="/resources/examples"
+  >
+    Browse real-world email template examples
+  </Card>
+</CardGroup>
