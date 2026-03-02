@@ -1,0 +1,132 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "React Email",
+  "projectDescription": "Build and send emails using React components with TypeScript support",
+  "theme": "palm",
+  "primaryColor": "#3b82f6",
+  "lightColor": "#60a5fa",
+  "darkColor": "#2563eb",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Components",
+            "pages": [
+              "components/overview",
+              "components/html",
+              "components/head",
+              "components/body",
+              "components/container",
+              "components/section",
+              "components/row",
+              "components/column",
+              "components/button",
+              "components/link",
+              "components/img",
+              "components/text",
+              "components/heading",
+              "components/hr",
+              "components/code-block",
+              "components/code-inline",
+              "components/preview",
+              "components/font",
+              "components/markdown"
+            ]
+          },
+          {
+            "group": "Utilities",
+            "pages": [
+              "utilities/render",
+              "utilities/tailwind"
+            ]
+          },
+          {
+            "group": "CLI",
+            "pages": [
+              "cli/overview",
+              "cli/dev",
+              "cli/build",
+              "cli/export",
+              "cli/start"
+            ]
+          },
+          {
+            "group": "Integrations",
+            "pages": [
+              "integrations/overview",
+              "integrations/resend",
+              "integrations/nodemailer",
+              "integrations/sendgrid",
+              "integrations/postmark",
+              "integrations/aws-ses",
+              "integrations/plunk",
+              "integrations/scaleway",
+              "integrations/mailersend"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Community",
+            "pages": [
+              "resources/examples",
+              "resources/email-client-support",
+              "resources/contributing"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "React components for building emails",
+    "Live preview development server",
+    "Render React to HTML email templates",
+    "Tailwind CSS support for email styling",
+    "Dark mode support",
+    "Cross email client compatibility",
+    "TypeScript support",
+    "Integration with major email service providers"
+  ],
+  "publicApiSurface": [
+    "@react-email/components",
+    "Button",
+    "Body",
+    "Container",
+    "Section",
+    "Row",
+    "Column",
+    "Html",
+    "Head",
+    "Heading",
+    "Text",
+    "Link",
+    "Img",
+    "Hr",
+    "Preview",
+    "Font",
+    "CodeBlock",
+    "CodeInline",
+    "Markdown",
+    "render()",
+    "Tailwind",
+    "react-email dev",
+    "react-email build",
+    "react-email export",
+    "react-email start",
+    "create-email"
+  ]
+}
